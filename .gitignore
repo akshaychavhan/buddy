@@ -1,36 +1,162 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
+# ==========================
+# Dependencies
+# ==========================
+node_modules/
+.pnp/
 .pnp.js
+.yarn/
+.pnpm-store/
 
-# testing
-/coverage
+# ==========================
+# Build outputs
+# ==========================
+dist/
+build/
+out/
+.next/
+.turbo/
+.expo/
+.expo-shared/
+web-build/
 
-# next.js
-/.next/
-/out/
+# ==========================
+# Native build artifacts
+# ==========================
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+ios/Pods/
+ios/build/
+ios/.xcode.env.local
+android/app/build/
+android/build/
+android/.gradle/
+android/local.properties
+android/app/release/
+android/app/debug/
+*.apk
+*.aab
+*.ipa
 
-# production
-/build
+# ==========================
+# Environment files
+# (NEVER COMMIT — contains secrets)
+# ==========================
+.env
+.env.local
+.env.development
+.env.development.local
+.env.production
+.env.production.local
+.env.test
+.env.test.local
+.env*.local
 
-# misc
-.DS_Store
-*.pem
+# ==========================
+# Expo specific
+# ==========================
+.expo/
+*.jsbundle
 
-# debug
+# ==========================
+# Next.js specific
+# ==========================
+.next/
+next-env.d.ts
+
+# ==========================
+# Prisma
+# ==========================
+# Don't commit migration database connection strings
+# but DO commit migration files themselves
+.prisma/
+prisma/.env
+
+# ==========================
+# Logs
+# ==========================
+logs/
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
 
-# local env files
-.env*.local
-.env
+# ==========================
+# Testing
+# ==========================
+coverage/
+.nyc_output/
+*.lcov
 
-# vercel
-.vercel
+# ==========================
+# IDE / Editor
+# ==========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
 
-# typescript
+.idea/
+*.iml
+*.swp
+*.swo
+*~
+
+# ==========================
+# OS files
+# ==========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ==========================
+# Cursor / AI assistant
+# ==========================
+# Keep .cursorrules committed (project-wide rules)
+# but ignore personal Cursor settings
+.cursor/
+
+# ==========================
+# Local TypeScript caches
+# ==========================
 *.tsbuildinfo
-next-env.d.ts
+
+# ==========================
+# Temporary files
+# ==========================
+tmp/
+temp/
+.cache/
+
+# ==========================
+# Cloudinary / upload artifacts
+# ==========================
+uploads/
+public/uploads/
+
+# ==========================
+# Personal notes (untracked)
+# ==========================
+NOTES.md
+TODO.md
+SCRATCH.md
+
+# ==========================
+# Optional: lock files
+# ==========================
+# Uncomment if you want to ignore one and standardize on the other
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
