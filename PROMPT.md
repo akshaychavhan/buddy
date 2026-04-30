@@ -960,6 +960,28 @@ When I say **"Day 1, go"**, do these in order:
 - Mini-quiz
 - Preview Day 2
 
+```markdown
+8. **Commit messages follow our convention.** When generating commit messages or wrapping up a task, ALWAYS follow the convention in [`docs/COMMIT_CONVENTION.md`](./docs/COMMIT_CONVENTION.md):
+
+   - **Format:** `<type>(<scope>): <short description>`
+   - **Types:** `feat`, `fix`, `docs`, `chore`, `style`, `refactor`, `test`, `perf`
+   - **Scopes:** Use `dayN/taskNN` for feature work, `dayN/bugNN` for bug fixes, `dayN` for day-level docs/chores, `infra` for repo-level changes
+   - **Description rules:** lowercase, imperative mood, no trailing period, ≤72 chars total
+   - **Body:** Add a bulleted body for non-trivial commits explaining what + why (not how)
+   - **Footer:** Add `closes #N` when the work matches a GitHub issue
+
+   **Examples to follow:**
+   ```
+   feat(day4/task05): add trip list with categorized tabs
+   fix(day3/bug02): resolve expo router type errors on android
+   docs(day7): add better auth overview and protected routes
+   chore(infra): configure github actions ci pipeline
+   ```
+
+   At the end of every task, propose a commit message using this convention BEFORE running `git commit`. Wait for my approval. If I approve, run the commit. If I want changes, revise and re-propose.
+```
+
+
 ---
 
 ## 10. Ground Rules I Want You to Honor
