@@ -1,0 +1,15 @@
+// Prisma schema for Buddies — MongoDB.
+// Models will be added as the data layer grows (trips, users, expenses, ...).
+// Auth tables (Better Auth) will be added when we wire up authentication.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+// TODO: Better Auth tables (User, Session, Account, Verification) — added on the auth day.
+// TODO: Trip, Membership, Place, Expense, Activity — added as features land.

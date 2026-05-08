@@ -3,6 +3,23 @@
 ## Goal
 We're cleaning the slate. The repo was originally planned as two apps (`apps/mobile` for Expo, `apps/api` for Next.js), but we've decided to ship a **single Next.js 14 app** instead — one codebase, one deploy. This commit just removes the old empty placeholders so Phase 2 can scaffold Next.js cleanly at the repo root.
 
+## Summary
+
+**Files at a glance**
+
+| Group       | Files                                              |
+| ----------- | -------------------------------------------------- |
+| Plan doc    | `plans/Infra_01_Collapse_existing_structure.md`    |
+| Demolition  | `apps/mobile/.gitkeep`, `apps/api/.gitkeep`, `apps/` |
+
+**What you'll run / what you'll see**
+
+| Command                                             | What it does                                                     |
+| --------------------------------------------------- | ---------------------------------------------------------------- |
+| `rm -rf apps/`                                      | Deletes the empty placeholder folders from the old monorepo plan. |
+| `git add plans/Infra_01_*.md && git add -u apps/`   | Stages the new plan doc + records the deletions.                  |
+| `git commit -m "Infra_01_Collapse_existing_structure"` | Saves both as a single atomic commit.                          |
+
 ## Commands
 ```bash
 # Remove the two empty placeholder dirs from the old monorepo plan
