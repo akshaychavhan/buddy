@@ -1,173 +1,212 @@
-# Day 1 — Project Setup: Why Expo
+# Day 1 — Project Setup: Why Next.js (App Router)
 
 > **Created:** 2026-04-30
+> **Updated:** 2026-05-08 (retargeted from React Native / Expo to Next.js 14)
 > **Phase:** 1 — Foundations
 
 ---
 
 ## 🎯 What Are We Learning?
 
-What **Expo** is, what the **managed workflow** gives us, and why we're choosing it over the bare React Native CLI for Buddies.
+What **Next.js** is, what the **App Router** gives us, and why we're using a single Next.js app for both the UI and the API of Buddies.
 
-In one sentence: **Expo is a framework and platform built on top of React Native that handles the painful native build/config plumbing for you, so you can write a real cross-platform mobile app in TypeScript and ship it to a real phone in 90 seconds.**
+In one sentence: **Next.js is an opinionated framework on top of React that gives you file-based routing, server components, and a single deploy artifact for both your UI and your API — so you can ship a real production-grade web app without stitching together a separate frontend, backend, and routing layer.**
 
 ---
 
 ## 🤔 Why Does This Matter?
 
-To build a React Native app, you have two starting points:
+For a web app like Buddies, you have a few starting points:
 
-| Path | Command | What you get |
-|---|---|---|
-| **Bare React Native CLI** | `npx react-native init` | A raw `ios/` Xcode project + `android/` Gradle project. You manage native builds yourself. |
-| **Expo (managed)** | `npx create-expo-app` | A pure JS/TS project. Expo runs the native build for you in the cloud (EAS) or via Expo Go. |
+| Path                          | What you write                              | What you ship                                          |
+| ----------------------------- | ------------------------------------------- | ------------------------------------------------------ |
+| **Vite + React SPA + a separate API** | A React app that fetches from an Express/Hono backend | Two deploys, two CORS configs, two CI pipelines.       |
+| **Next.js App Router (us)**   | One project: pages, layouts, API routes     | **One** deploy. UI and API ship together.              |
+| **Bare Node + EJS / handlebars** | Server-rendered HTML + per-route JS sprinkles | Painful to build a real SPA-like UX on top of.       |
 
-For a **solo developer learning RN from Day 1**, bare RN means fighting CocoaPods, Gradle, Xcode signing certificates, and the Android NDK *before* you write a single screen. Expo eliminates that — you literally don't open Xcode or Android Studio for V1.
+For a **solo developer building a real product end-to-end**, the SPA + separate API path means you're managing two codebases just to log in a user. Next.js collapses that. Your `app/page.tsx` (a React component) and `app/api/health/route.ts` (an HTTP endpoint) live in the same project, share types, share the same dev server, and deploy as one unit.
 
-The trade-off: you can't drop in arbitrary custom native modules without "ejecting" (now called **prebuild**). For Buddies V1, every module we need (camera, maps, notifications, file system, image picker) is supported out-of-the-box by Expo. So managed wins.
+The trade-off: Next.js is opinionated. You learn its file conventions (`page.tsx`, `layout.tsx`, `route.ts`, `loading.tsx`, `error.tsx`) and its mental model (server vs client components). For a real app shipping real features, that opinionation is a feature, not a bug.
 
 ---
 
 ## 🧠 How It Works (The Concept)
 
-### The bridge model — the most important mental shift
+### Server Components by default — the most important mental shift
 
-Web React renders to the **DOM**. React Native renders to **native UI primitives** — actual `UIView` on iOS and `android.view.View` on Android.
+In a classic SPA you'd write a component, call `useEffect` to fetch data, set state, and re-render. The server sends an empty HTML shell; the browser does all the work.
+
+In the App Router, **components are server components by default**. They run on the server, talk directly to your database, and ship only the resulting HTML (plus the islands of interactivity that need it) to the browser.
 
 ```
-Your TypeScript code (JS thread)
-        │
-        │  serialized messages
-        ▼
-   ── BRIDGE ──   (or in newer RN: JSI direct calls)
+Request lands at the server
         │
         ▼
-   Native runtime (UIKit on iOS / Android Views)
+Server runs your page.tsx (a Server Component)
+   - awaits db query directly
+   - renders to HTML
+        │
+        ▼
+HTML lands in the browser, painted immediately
+        │
+        ▼
+Client Components ("use client") hydrate where they're needed
+        │
+        ▼
+Server Actions are RPC calls disguised as functions —
+the client calls them, the server executes them.
 ```
 
-There is no DOM, no `window`, no `document`. When you write `<View>`, RN translates that to a real native view. When you write `<Text>`, it becomes a real `UILabel` / `TextView`.
+There is no `useEffect → fetch → setState` for initial data. There is no separate `/api/trips` endpoint to call from the client (unless you want one — for that, route handlers exist).
 
-### What "managed" means
+### File conventions you'll see all the time
 
-In Expo's managed workflow:
-- You write **only** `App.tsx` and JS/TS code
-- Expo **owns** the native projects (you don't see `ios/` or `android/` folders)
-- A single binary called **Expo Go** (free app on the App Store / Play Store) is preloaded with all of Expo's supported native modules
-- Your JS bundle is shipped to Expo Go over your local Wi-Fi via the Metro bundler
-- For real production builds: **EAS Build** runs the native build in the cloud and gives you `.ipa` / `.aab` files
+```
+app/
+├── layout.tsx          # wraps every page in this segment (the <html> shell, etc.)
+├── page.tsx            # the page itself, rendered at this URL
+├── loading.tsx         # shown while page.tsx is awaiting data (streaming)
+├── error.tsx           # shown when page.tsx throws (a client component)
+├── not-found.tsx       # shown for 404s
+└── api/
+    └── health/
+        └── route.ts    # an HTTP endpoint at /api/health
+```
 
-### Why this is a superpower for learning
+### Server Component vs Client Component
 
-- **No Xcode / Android Studio for Day 1.** Just `npx expo start` → scan QR → app on phone in 30 seconds.
-- **Hot reload** is rock-solid. Edit `App.tsx`, hit save, see the change on your phone instantly.
-- **Same JS code runs on both iOS and Android.** Platform differences (e.g. shadow APIs) we'll learn on Day 2.
+- **Default = Server Component.** Runs on the server. Can `await` directly. Cannot use `useState`, `useEffect`, or anything browser-only.
+- **`"use client"` at the top of a file = Client Component.** Runs in the browser. Can use hooks, event handlers, `window`, etc. Cannot import server-only code (like `process.env.DATABASE_URL`).
+
+You don't need every component to declare itself one or the other. The runtime treats `"use client"` as a boundary — anything imported into a client component is also bundled to the client.
+
+### Server Actions — RPC as a function call
+
+```tsx
+// app/trips/actions.ts
+"use server";
+
+export async function createTrip(formData: FormData) {
+  const title = formData.get("title");
+  await db.trip.create({ data: { title } });
+}
+```
+
+```tsx
+// app/trips/new/page.tsx (server component)
+import { createTrip } from "../actions";
+
+export default function NewTripPage() {
+  return (
+    <form action={createTrip}>
+      <input name="title" />
+      <button type="submit">Create</button>
+    </form>
+  );
+}
+```
+
+That's it. No `/api/trips` route, no `fetch`, no `useState`. The form posts → the server runs `createTrip` → the page revalidates.
 
 ---
 
-## 🔄 React / Next.js Parallel
+## 🔄 App Router vs Pages Router
 
-This is the **single most important parallel** for you to internalize today:
+If you're coming from older Next.js (or have read older Next.js tutorials), you may know the **Pages Router** style: `pages/index.tsx`, `pages/api/foo.ts`, `getServerSideProps`. The App Router is the modern replacement.
 
-> **Next.js is to React what Expo is to React Native.**
+| Concept             | Pages Router                               | App Router (us)                                       |
+| ------------------- | ------------------------------------------ | ----------------------------------------------------- |
+| Routes              | `pages/trips/[id].tsx`                     | `app/trips/[id]/page.tsx`                             |
+| Data fetching       | `getServerSideProps`, `getStaticProps`     | `await` directly in a Server Component                |
+| API routes          | `pages/api/foo.ts`                         | `app/api/foo/route.ts`                                |
+| Layouts             | `_app.tsx` + `_document.tsx`               | Nested `layout.tsx` per segment                       |
+| Loading state       | Manual                                     | `loading.tsx` file (server-streamed)                  |
+| Error boundary      | Manual                                     | `error.tsx` file (must be a Client Component)         |
+| Default rendering   | Client (with SSR helpers)                  | **Server** (with explicit client opt-in)              |
 
-Both are opinionated frameworks built on top of a more primitive library, providing routing, build pipelines, dev server, and "batteries included" defaults so you can stop yak-shaving and start building features.
-
-| Concept | Next.js (Web) | Expo (Mobile) |
-|---|---|---|
-| Underlying library | React | React Native |
-| Bare alternative | Plain CRA / Vite + React | `npx react-native init` |
-| Build/dev server | Next.js dev server (Webpack/Turbopack) | Metro bundler |
-| Routing | App Router / Pages Router | Expo Router (Day 3) |
-| Deployment platform | Vercel | EAS (Expo Application Services) |
-| Hot reload | Fast Refresh | Fast Refresh |
-| Env vars convention | `NEXT_PUBLIC_*` exposed to client | `EXPO_PUBLIC_*` exposed to client |
-
-Just like you'd never start a serious Next.js project with raw React + custom Webpack, you shouldn't start a serious RN project with bare RN CLI unless you have a specific reason.
+The App Router is the future. Both still work in Next.js 14, but everything new is built around App Router primitives (server components, server actions, streaming).
 
 ---
 
 ## 💻 Tiny Isolated Example
 
-This is the **smallest possible Expo + TypeScript app** — three files. Day 1's deliverable is essentially this:
+This is essentially what already lives in the repo after `Infra_02`:
 
 ```tsx
-// App.tsx
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-
-export default function App() {
+// app/page.tsx — a Server Component, runs on the server
+export default function HomePage() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Hello Buddies 🧳</Text>
-      <StatusBar style="auto" />
-    </View>
+    <main className="p-8">
+      <h1 className="text-3xl">Buddies — Day 1</h1>
+      <p>Try /api/health to see the same app serve a JSON endpoint.</p>
+    </main>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: { fontSize: 28, fontWeight: '600' },
-});
 ```
 
-Note three things that are different from web React:
-1. `<View>`, not `<div>`
-2. `<Text>` is **mandatory** — you cannot put raw text outside a `<Text>` (RN throws). More on this in [day1_rn_vs_react.md](./day1_rn_vs_react.md).
-3. Styles use `StyleSheet.create({...})` — JS objects, not CSS strings. `flex: 1` ≠ `flex: 1` in CSS exactly (defaults differ — Day 2).
+```ts
+// app/api/health/route.ts — an HTTP endpoint at /api/health
+export async function GET() {
+  return Response.json({ ok: true, ts: Date.now() });
+}
+```
+
+Three things to notice:
+
+1. **No `useEffect`, no `fetch`** — `HomePage` is server-rendered. The HTML lands in the browser ready to go.
+2. **`route.ts` is the API.** Same project, same TypeScript config, same package.json. UI and API ship as one app.
+3. **Tailwind classes work everywhere.** No CSS-in-JS, no styled components — just utility classes resolved at build time.
 
 ---
 
 ## 🚀 Applied to Buddies
 
-Day 1's task doc applies this directly:
+The Day 1 task doc applies this directly:
 > See: [Task 01 — Project Scaffolding](../task/01_project_scaffolding.md)
 
-We'll create the Expo TS project under `apps/mobile/` (the repo is already set up as a monorepo) and render a "Hello Buddies" screen on a real phone via Expo Go.
+The Next.js project is already scaffolded at the repo root (it landed in `Infra_02_Scaffold_root_nextjs` — read the matching plan file at `plans/Infra_02_Scaffold_root_nextjs.md` for a beginner-friendly walkthrough). Day 1's job is to **understand** the scaffold, run it, and verify both `localhost:3000` (the page) and `localhost:3000/api/health` (the API) respond. From this commit on, every feature lives inside the same `app/` tree.
 
 ---
 
 ## ⚠️ Gotchas & Beginner Mistakes
 
-- **Don't `npm install -g expo-cli`.** That's the legacy CLI. The modern flow uses `npx expo` and `npx create-expo-app` — bundled, always up-to-date, no global pollution.
-- **Phone + computer must be on the same Wi-Fi network** for Expo Go's LAN tunnel to work. If you're on corporate Wi-Fi with client isolation, fall back to `npx expo start --tunnel` (slower but works through any network).
-- **Managed ≠ permanent jail.** If you ever need a custom native module in Buddies V2, you can run `npx expo prebuild` to eject into a bare project — your JS code stays the same.
-- **🤖 Android emulator vs 📱 iOS simulator** are *optional* on Day 1. We're using a real phone via Expo Go, which is faster and more representative.
+- **Forgetting `"use client"`.** If you try to use `useState` or `onClick` in a file that doesn't have `"use client"` at the top, you'll see an error like *"You're importing a component that needs useState. It only works in a Client Component"*. Add `"use client"` and move on.
+- **Server-only code leaking to the client.** Importing `db` (your Prisma client) into a `"use client"` file silently bundles your database client into the browser. Use `import "server-only"` at the top of files that must never reach the browser to fail loudly instead.
+- **Env vars without `NEXT_PUBLIC_`.** Anything in `.env.local` is server-only by default. To expose a value to client components, prefix it with `NEXT_PUBLIC_` (e.g. `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`). Without that prefix, `process.env.FOO` is `undefined` in the browser.
+- **Hydration mismatch from `Date.now()` or `Math.random()` in a Server Component.** The server renders `Date.now()` at request time; the client tries to re-render and gets a different number → React complains. Move that logic to a Client Component or compute it in a `useEffect`.
+- **Confusing `next.config.ts` with `next.config.mjs`.** Next.js 14 doesn't read `.ts` configs (that's Next 15). We use `next.config.mjs` — see `Infra_04` for the fix.
 
 ---
 
 ## 🧪 Quick Quiz
 
-1. What is the difference between Expo's managed workflow and a bare React Native CLI project?
-2. What plays the role of "Vercel" in the Expo ecosystem?
-3. Why don't we need to open Xcode or Android Studio on Day 1?
-4. If your `<Text>Hello</Text>` worked but `<View>Hello</View>` crashed, why?
-5. What environment variable prefix exposes a value to the Expo client at build time? (Hint: parallel to `NEXT_PUBLIC_*`.)
+1. What does it mean that components are "server components by default" in the App Router?
+2. When do you need to add `"use client"` to a file?
+3. Where do API endpoints live in the App Router, and what file convention defines them?
+4. What's a Server Action, and how is it different from a route handler?
+5. Why does `process.env.DATABASE_URL` work in a Server Component but `process.env.DATABASE_URL` is `undefined` in a Client Component?
 
 ---
 
 ## 📌 Key Takeaways
 
-- **Expo is to React Native what Next.js is to React.** Opinionated framework, batteries included, you focus on features.
-- The **bridge** translates your JS calls into native UI operations — there is no DOM.
-- **Expo Go** + Metro bundler = your phone is a live dev environment over Wi-Fi.
-- For Buddies V1, every module we need is in Expo's managed set. Zero reason to go bare.
+- **Next.js App Router gives you UI and API in one project.** One deploy, one TypeScript config, one mental model.
+- **Server Components by default.** Render data on the server, hydrate only the islands that need interactivity.
+- **Server Actions are RPC** — write a server function, call it from a form, no HTTP boilerplate.
+- **The runtime split matters.** Server Components, Client Components, Route Handlers, and Server Actions each have rules — get them wrong and you get fast, loud errors that point you at the fix.
 
 ---
 
 ## 🔗 References
 
-- [Expo Documentation — Get started](https://docs.expo.dev/get-started/introduction/)
-- [Expo vs React Native CLI (official comparison)](https://docs.expo.dev/workflow/expo-go/)
-- [React Native — The bridge / new architecture (Hermes + JSI)](https://reactnative.dev/architecture/overview)
-- [EAS Build](https://docs.expo.dev/build/introduction/)
+- [Next.js — App Router docs](https://nextjs.org/docs/app)
+- [Next.js — Server Components](https://nextjs.org/docs/app/building-your-application/rendering/server-components)
+- [Next.js — Server Actions](https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations)
+- [Next.js — Route Handlers](https://nextjs.org/docs/app/building-your-application/routing/route-handlers)
+- [App Router vs Pages Router migration guide](https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration)
 
 ---
 
 ## ➡️ What's Next?
 
-Continue to [day1_installation.md](./day1_installation.md) to verify your machine is ready, then [Task 01 — Project Scaffolding](../task/01_project_scaffolding.md) to actually create the project.
+Continue to [day1_installation.md](./day1_installation.md) to verify your machine is ready, then [Task 01 — Project Scaffolding](../task/01_project_scaffolding.md) to get the dev server running.

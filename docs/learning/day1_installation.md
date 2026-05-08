@@ -1,6 +1,7 @@
 # Day 1 — Installation: Tooling Checklist
 
 > **Created:** 2026-04-30
+> **Updated:** 2026-05-08 (retargeted from Expo / phone-based dev to web-based Next.js dev)
 > **Phase:** 1 — Foundations
 > **Mode:** Quick reference checklist (env already set up — confirming, not installing)
 
@@ -8,7 +9,7 @@
 
 ## 🎯 What Are We Learning?
 
-The minimum tools required on your machine + phone to run an Expo project, and the **one-line verification command** for each.
+The minimum tools required on your machine to run Buddies (the Next.js app), plus the **one-line verification command** for each.
 
 You already confirmed your dev environment is set up. This doc is a defensive checklist — run each command, confirm the expected output, and we move on. If anything fails, that becomes Bug #01 and we slow down.
 
@@ -16,10 +17,10 @@ You already confirmed your dev environment is set up. This doc is a defensive ch
 
 ## 🤔 Why Does This Matter?
 
-90% of Day 1 failures for RN newcomers are **tooling failures**, not code failures:
-- Wrong Node version → Metro won't start
-- Phone + laptop on different Wi-Fi networks → QR scan succeeds but app never loads
-- Old global `expo-cli` installed → conflicts with the modern bundled CLI
+90% of Day 1 failures for newcomers are **tooling failures**, not code failures:
+- Wrong Node version → Next.js refuses to start, or crashes mid-build
+- pnpm not installed (or wrong version) → `pnpm install` fails before we begin
+- Missing `.env.local` → Prisma client can't connect; the dev server runs but routes blow up
 
 Catching these now means we don't waste mental cycles debugging environment issues mid-feature.
 
@@ -27,16 +28,17 @@ Catching these now means we don't waste mental cycles debugging environment issu
 
 ## 🧠 How It Works (The Concept)
 
-Three layers of tooling:
+Five layers of tooling:
 
 ```
-1. Your dev machine          →  Node, Git, npm/npx (ships with Node)
-2. The Expo CLI              →  bundled with `npx`, no global install
-3. Your phone                →  Expo Go app from App Store / Play Store
-4. The network connecting    →  same Wi-Fi LAN (or `--tunnel` fallback)
+1. Your dev machine          →  Node 20+, Git, pnpm
+2. The Next.js dev server    →  `pnpm dev` (built-in, started by your package.json script)
+3. Your browser              →  Any modern Chromium / Firefox / Safari
+4. The database              →  MongoDB Atlas (free tier) or local MongoDB
+5. Cloud accounts (later)    →  Cloudinary (image hosting), Resend (transactional email)
 ```
 
-That's it. No SDK installs, no environment variable juggling. Expo Go is the runtime — it's already preloaded with everything the managed workflow can call.
+That's it. No emulators, no native SDKs, no LAN dance — your dev server runs on `localhost:3000` and your browser opens it. Fast iteration.
 
 ---
 
@@ -50,7 +52,7 @@ Run each command. Confirm the expected output. Tick the box.
 node --version
 ```
 
-**Expected:** `v20.x.x` or higher (Expo SDK 51+ requires Node 18+; we recommend 20 LTS).
+**Expected:** `v20.x.x` or higher. The repo's `.nvmrc` pins `20`, and `package.json` has `"engines": { "node": ">=20" }`. If you use `nvm`, `nvm use` in the project root picks the right version automatically.
 
 - [ ] Node ≥ 20.x
 
@@ -64,57 +66,100 @@ git --version
 
 - [ ] Git installed
 
-### 3. npx works
+### 3. pnpm
 
 ```bash
-npx --version
+pnpm --version
 ```
 
-**Expected:** ships with Node, should print a version. We use `npx` to invoke `create-expo-app` and `expo` without globals.
+**Expected:** `9.x.x`. The repo's `package.json` pins `"packageManager": "pnpm@9.12.0"` — if you have a different major version, install pnpm 9: `npm install -g pnpm@9` or `corepack enable && corepack prepare pnpm@9.12.0 --activate`.
 
-- [ ] npx works
+- [ ] pnpm ≥ 9.x
 
-### 4. No legacy global Expo CLI
+### 4. The dev server starts
+
+From the repo root:
 
 ```bash
-npm list -g --depth=0 | grep expo-cli || echo "clean"
+pnpm install
+pnpm dev
 ```
 
-**Expected:** prints `clean`. If you see `expo-cli@x.x.x`, uninstall it: `npm uninstall -g expo-cli` — it conflicts with the modern bundled CLI.
+**Expected:** terminal prints something like `▲ Next.js 14.x.x — Local: http://localhost:3000 — Ready in 2s`. Open the URL in a browser — you should see "Buddies — Day 1".
 
-- [ ] No legacy `expo-cli` global
+- [ ] `pnpm dev` starts and `localhost:3000` loads the page
 
-### 5. Expo Go on phone
+### 5. The API endpoint responds
 
-You said this is installed. Just confirm:
+In a separate terminal:
 
-- 📱 **iOS:** App Store → search "Expo Go" → install
-- 🤖 **Android:** Google Play → search "Expo Go" → install
+```bash
+curl -s http://localhost:3000/api/health
+```
 
-Open the app once. You'll see a "Recently used" list (probably empty). Leave it open for Day 1.
+**Expected:** `{"ok":true,"ts":<some-number>}`. This is the single-deploy proof — the same Next.js process serves both the UI and the API.
 
-- [ ] Expo Go installed and opened on phone
+- [ ] `/api/health` returns `{"ok":true,...}`
 
-### 6. Same Wi-Fi network
+### 6. `.env.local` is set up
 
-The most common Day-1 footgun. Your **dev laptop** and your **phone** must be on the **same** Wi-Fi network. Corporate Wi-Fi often has "client isolation" enabled, which blocks LAN traffic between devices — Metro can't reach the phone, QR scan loads forever.
+```bash
+ls .env.local || echo "missing"
+```
 
-If you suspect this, the fallback is `npx expo start --tunnel` — pipes traffic through Expo's servers via ngrok-style tunnel. Slower (~2× build) but works through any network including cellular.
+**Expected:** if you're working with the database, you should see `.env.local` listed (it's gitignored — you create it from `.env.example`). If you're just running the page + health route, `.env.local` is optional.
 
-- [ ] Phone + laptop on same Wi-Fi (or accept `--tunnel` fallback)
+When you're ready to wire up the database:
+
+```bash
+cp .env.example .env.local
+# then edit .env.local and fill in DATABASE_URL, BETTER_AUTH_SECRET, etc.
+```
+
+- [ ] `.env.local` exists (or you've consciously deferred it)
+
+### 7. MongoDB connection-string smoke test (optional for today)
+
+If `.env.local` has a real `DATABASE_URL`:
+
+```bash
+pnpm prisma:generate    # generates the Prisma client from the schema
+```
+
+**Expected:** "✔ Generated Prisma Client". This doesn't connect to the database — it just generates types. The connection happens later, the first time a server component calls `db.trip.findMany()`.
+
+If you want to test the actual connection now:
+
+```bash
+pnpm exec prisma db pull
+```
+
+This will reach the MongoDB instance and pull its current schema. Failing with "auth error" is fine for today — it just means the credentials need fixing, but the network reachability is proven. Failing with "ENOTFOUND" / "ETIMEOUT" means the URL or whitelisting is wrong.
+
+- [ ] (Optional) Prisma client generated from schema
+
+### 8. Cloudinary + Resend accounts (deferred)
+
+These are **not** required to run Day 1. We'll wire them up in their respective days (Cloudinary on Day 8, Resend on Day 11). For now, just have the accounts ready:
+
+- [Cloudinary free tier](https://cloudinary.com/users/register/free) — image hosting
+- [Resend free tier](https://resend.com/signup) — transactional email (3000/month)
+
+- [ ] Account links bookmarked (no setup needed today)
 
 ---
 
-## 🔄 React / Next.js Parallel
+## 🔄 Mental anchor: web dev vs the world you came from
 
-| Concern | Next.js dev | Expo dev |
-|---|---|---|
-| Runtime | `node` | Expo Go on phone |
-| Dev server | `next dev` (Webpack/Turbopack) | `npx expo start` (Metro) |
-| Connection | `localhost:3000` in your browser | QR code → phone scans → Metro serves bundle over LAN |
-| Restart trigger | edit any file → HMR | edit any file → Fast Refresh |
+If you've ever set up a web app dev environment before, this is identical. There's no exotic phone-pairing, no SDK install, no platform-specific flag.
 
-The mental shift: in web dev your "device" is a tab on the same machine. In RN dev your "device" is a separate physical phone. Hot reload still works — just over the network instead of localhost.
+| Concern              | Web dev (us)                                   |
+| -------------------- | ---------------------------------------------- |
+| Runtime              | Node 20+ on your machine                       |
+| Dev server           | `pnpm dev` (Next.js built-in, Turbopack/Webpack under the hood) |
+| Connection           | Browser → `http://localhost:3000`              |
+| Restart trigger      | Edit any file → Fast Refresh                   |
+| Production deploy    | Push to `main` → Vercel / Render / Fly auto-builds |
 
 ---
 
@@ -122,48 +167,50 @@ The mental shift: in web dev your "device" is a tab on the same machine. In RN d
 
 These are **not** required to ship Buddies V1. Skip them until you actually need them:
 
-- **🤖 Android Studio** — only for the Android emulator. Real phone via Expo Go is faster.
-- **📱 Xcode** — macOS only, for iOS simulator. Same logic — physical phone is faster on Day 1.
-- **EAS CLI** — `npm i -g eas-cli` — only for production cloud builds. Day 15 / V2 territory.
-- **Watchman** — file watcher; macOS users on `brew install watchman`. Often improves Metro reliability but Expo runs fine without it.
+- **MongoDB Compass / Studio 3T** — GUI for inspecting your MongoDB collections. Helpful from Day 6 onward.
+- **Postman / HTTPie / `httpie`** — for hitting your route handlers without a browser. The repo's CI replays the same checks via `curl`, so a CLI tool is fine.
+- **Docker** — only if you want to run MongoDB locally instead of using Atlas. Atlas free tier is simpler.
 
 ---
 
 ## ⚠️ Gotchas & Beginner Mistakes
 
-- **`zsh: command not found: expo`** after running `expo start` directly → you're trying to use the legacy global. Use `npx expo start` instead.
-- **QR scan loads forever** → 95% of the time, it's the Wi-Fi issue. Drop to `npx expo start --tunnel`.
-- **iOS Expo Go won't scan the QR from terminal** → 📱 iOS uses the camera app (not Expo Go's scanner) for QR codes. Open Camera, point at QR, tap the banner. (Android: scan from inside Expo Go.)
-- **Apple Silicon Mac + old Node** → if Node was installed via Rosetta you may hit native module mismatches. Reinstall via `nvm` and use Node 20 LTS arm64 build.
+- **`pnpm: command not found`** → install pnpm: `npm install -g pnpm@9` (or use `corepack enable`).
+- **`pnpm dev` errors with "Configuring Next.js via 'next.config.ts' is not supported"** → you're on Next 14, which only reads `.mjs`/`.js`/`.cjs` configs. The repo already uses `next.config.mjs` (fixed in `Infra_04`).
+- **Page loads but `/api/health` returns 404** → make sure the file lives at `app/api/health/route.ts` and that you exported a `GET` function. The folder name (`health`) is what determines the URL.
+- **"Module not found: @prisma/client"** → run `pnpm prisma:generate`. The Prisma client is generated from the schema, not bundled with the npm package.
+- **Hot reload not picking up Tailwind class changes** → make sure your file is in the `content` glob in `tailwind.config.ts`. New top-level folders need to be added there.
 
 ---
 
 ## 🧪 Quick Quiz
 
-1. Why don't we install `expo-cli` globally anymore?
-2. What is the fallback if your phone and laptop can't talk over LAN?
-3. What's the minimum Node version Expo SDK 51+ requires?
-4. Do you need Xcode or Android Studio to start Day 1? Why or why not?
+1. What's the minimum Node version Buddies requires?
+2. Which package manager does Buddies pin via `package.json#packageManager`?
+3. Where does the `/api/health` endpoint live in the App Router file convention?
+4. What's the difference between `pnpm install` and `pnpm prisma:generate`?
+5. Do you need MongoDB / Cloudinary / Resend accounts to run Day 1 successfully?
 
 ---
 
 ## 📌 Key Takeaways
 
-- Verify Node 20+, Git, and Expo Go on phone — that's the entire Day 1 toolchain.
-- `npx expo` is the modern way; never `npm install -g expo-cli`.
-- Same Wi-Fi or `--tunnel`. There is no third option.
-- Optional tools (emulators, EAS) are deferred until we actually need them.
+- Verify Node 20+, pnpm, and `pnpm dev` running — that's the entire Day 1 toolchain.
+- `.env.local` is optional today; needed from Day 6 (database) onward.
+- Cloudinary + Resend accounts are bookmarks, not installs.
+- No emulators, no LAN, no native SDKs — your browser at `localhost:3000` is the entire dev environment.
 
 ---
 
 ## 🔗 References
 
-- [Expo — Set up your environment](https://docs.expo.dev/get-started/set-up-your-environment/)
-- [Expo Go on the App Store](https://apps.apple.com/app/expo-go/id982107779)
-- [Expo Go on Google Play](https://play.google.com/store/apps/details?id=host.exp.exponent)
+- [Next.js — Installation](https://nextjs.org/docs/app/getting-started/installation)
+- [pnpm — Installation](https://pnpm.io/installation)
+- [Prisma — Get Started with MongoDB](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/mongodb-typescript-mongodb)
+- [MongoDB Atlas — Free Tier](https://www.mongodb.com/cloud/atlas/register)
 
 ---
 
 ## ➡️ What's Next?
 
-Once every box above is ticked, proceed to [Task 01 — Project Scaffolding](../task/01_project_scaffolding.md) to create the Expo project.
+Once every box above is ticked, proceed to [Task 01 — Project Scaffolding](../task/01_project_scaffolding.md) to walk through the project structure that's already in place.
