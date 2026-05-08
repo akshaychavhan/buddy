@@ -1,15 +1,17 @@
-# 🧳 Buddies — Trip Planner Mobile App | Master Build & Learning Prompt
+# 🧳 Buddies — Trip Planner Web App | Master Build & Learning Prompt
 
 > **Tagline:** Plan trips. Travel together. Remember everything.
-> **Use this prompt with:** Cursor IDE (with Claude as the model)
+> **Use this prompt with:** Cursor IDE / Claude Code (with Claude as the model)
 > **Mode:** Teach-first learning + self-documenting project
-> **Audience:** A 4+ year React/Next.js developer learning React Native from Day 1
+> **Audience:** A 4+ year React/Next.js developer leveling up by shipping a real, end-to-end production app
 
 ---
 
 ## 0. Who I Am & How I Want to Work
 
-I'm a **Full Stack Developer with 4+ years of experience** in React, Next.js, Node.js, MongoDB, and Prisma. **Zero prior React Native experience.** I want to build a real, production-quality cross-platform mobile app called **Buddies** — a trip planner built for groups of friends — while learning React Native properly from the ground up.
+I'm a **Full Stack Developer with 4+ years of experience** in React, Next.js, Node.js, MongoDB, and Prisma. I want to build a real, production-quality web app called **Buddies** — a trip planner built for groups of friends — and treat it as a public learning journey: every concept, every bug, every feature, documented for myself and anyone reading along.
+
+This is a **single Next.js 14 (App Router) app** at the repo root. UI and API live in the same project and ship as one deploy. No separate mobile app, no microservices.
 
 ### My Learning Style — Read This Carefully
 
@@ -19,37 +21,47 @@ For **EVERY** concept, feature, library, or decision, you must explain in this e
 2. **WHY** we need it — what problem it solves, why this approach over alternatives
 3. **HOW** we implement it — step-by-step with code
 
-Never skip any of the three. Even for things that seem obvious. I'm a beginner in React Native — assume nothing is obvious to me in this ecosystem.
+Never skip any of the three. Even for things that seem obvious. Assume nothing is obvious — write for the version of me reading this six months from now.
 
-### Always Compare to React / Next.js
+### Mental-model anchors
 
-Whenever there's a parallel to web React or Next.js, call it out explicitly:
-> *"In React you'd write `<div onClick={…}>`. In React Native you write `<Pressable onPress={…}>` because mobile doesn't have click events — only touch events."*
+When introducing something Next.js–specific (RSC, server actions, route handlers, edge runtime, hydration), call out the model explicitly:
 
-This is the fastest way for me to learn — by anchoring new concepts to what I already know.
+> *"In a classic SPA you'd `useEffect → fetch → setState`. With Server Components you just `await fetch()` at the top of the component — it runs on the server, the data is already in the HTML when the page lands."*
+
+These anchors are the fastest way to learn — by linking the new mental model to the one already in my head.
 
 ---
 
 ## 1. 📚 THE DOCUMENTATION SYSTEM (Critical — Read & Follow Always)
 
-**Every session, every concept, every bug, every task gets documented.** Non-negotiable.
+**Every commit, every concept, every bug, every task gets documented.** Non-negotiable.
 
-### Folder Structure (Create This First in Day 1)
+### Folder Structure
 
 ```
 buddies/
-├── app/                      # Expo Router screens
-├── components/
-├── ...
-├── FUTURE_SCOPE.md           # V2 features playbook (separate doc)
+├── app/                      # Next.js App Router — pages, layouts, route handlers
+├── components/               # Shared React components (added as features land)
+├── lib/                      # Server-only helpers, db client, etc.
+├── prisma/                   # Prisma schema + generated client
+│   └── schema.prisma
+├── public/                   # Static assets
+├── plans/                    # ⭐ One Markdown note per commit (beginner-friendly)
+│   ├── Infra_01_Collapse_existing_structure.md
+│   ├── Infra_02_Scaffold_root_nextjs.md
+│   └── ...
+├── PROMPT.md                 # This file
+├── FUTURE_SCOPE.md           # V2 features playbook
 └── docs/
     ├── README.md             # Master index — auto-update as new docs are added
+    ├── COMMIT_CONVENTION.md  # `Infra_NN_Descriptive_name` + plan-file workflow
     ├── learning/             # Concept lessons, one per topic
     │   ├── day1_setup.md
     │   ├── day1_installation.md
     │   └── ...
     ├── bug/                  # Every bug encountered, sequentially numbered
-    │   ├── 01_metro_bundler_fails.md
+    │   ├── 01_short_description.md
     │   └── ...
     └── task/                 # Every feature/task, sequentially numbered
         ├── 01_project_scaffolding.md
@@ -58,17 +70,19 @@ buddies/
 
 ### Naming Conventions (Strict)
 
-- **Learning docs:** `dayN_<snake_case_topic>.md` — multiple per day allowed
-- **Bug docs:** `NN_<snake_case_short_description>.md` — sequential, zero-padded
-- **Task docs:** `NN_<snake_case_feature_name>.md` — sequential, zero-padded
+- **Plan docs (`/plans/`):** `<Category>_NN_Descriptive_name.md` — matches the commit message exactly. See `docs/COMMIT_CONVENTION.md`.
+- **Learning docs:** `dayN_<snake_case_topic>.md` — multiple per day allowed.
+- **Bug docs:** `NN_<snake_case_short_description>.md` — sequential, zero-padded.
+- **Task docs:** `NN_<snake_case_feature_name>.md` — sequential, zero-padded.
 
 ### When to Create Each Doc Type
 
-| Trigger | Doc Type | Action |
-|---|---|---|
-| Starting a new concept/lesson | Learning | Create BEFORE writing code, fill in WHAT/WHY/HOW upfront |
-| Encountering any error/bug (even small) | Bug | Create immediately when bug appears; update with solution after fixing |
-| Starting a new feature/task | Task | Create at task kickoff; update progressively as work continues |
+| Trigger                                  | Doc Type | Action                                                                 |
+| ---------------------------------------- | -------- | ---------------------------------------------------------------------- |
+| Starting any commit                      | Plan     | Create BEFORE making the changes; commit them together atomically.     |
+| Starting a new concept/lesson            | Learning | Create BEFORE writing code, fill in WHAT/WHY/HOW upfront.              |
+| Encountering any error/bug (even small)  | Bug      | Create immediately; update with solution after fixing.                 |
+| Starting a new feature/task              | Task     | Create at task kickoff; update progressively as work continues.        |
 
 ### Master Index (`docs/README.md`)
 
@@ -82,7 +96,7 @@ Auto-maintain. Whenever you create a new doc, also add a line to `docs/README.md
 - ...
 
 ## 🐛 Bug Journal
-- [Bug 01 — Metro bundler fails to start](./bug/01_metro_bundler_fails.md)
+- [Bug 01 — short description](./bug/01_short_description.md)
 - ...
 
 ## 📋 Task Journal
@@ -91,6 +105,9 @@ Auto-maintain. Whenever you create a new doc, also add a line to `docs/README.md
 
 ## 🔮 Future Scope
 - See [FUTURE_SCOPE.md](../FUTURE_SCOPE.md) for V2 features playbook
+
+## 📝 Convention
+- See [COMMIT_CONVENTION.md](./COMMIT_CONVENTION.md) for the commit/plan-file convention
 ```
 
 ---
@@ -110,14 +127,8 @@ Auto-maintain. Whenever you create a new doc, also add a line to `docs/README.md
 ## 🎯 What Are We Learning?
 ## 🤔 Why Does This Matter?
 ## 🧠 How It Works (The Concept)
-## 🔄 React / Next.js Parallel
-
-| React (Web) | React Native |
-|---|---|
-| `<div>` | `<View>` |
-| `onClick` | `onPress` |
-
 ## 💻 Tiny Isolated Example
+
 ```tsx
 // Smallest possible runnable code
 ```
@@ -173,10 +184,11 @@ Auto-maintain. Whenever you create a new doc, also add a line to `docs/README.md
 ## 🎯 Goal
 ## 📖 User Story
 ## ✅ Acceptance Criteria
-- [ ] Works on iOS and Android
+- [ ] Works on desktop and mobile breakpoints
 - [ ] TypeScript-strict, no `any`
 - [ ] Theme-aware (light + dark)
 - [ ] Localized (no hardcoded English)
+- [ ] Accessible (semantic HTML, ARIA where needed)
 
 ## 🛠️ Tech Decisions
 ### Decision 1: <choice>
@@ -194,26 +206,30 @@ Auto-maintain. Whenever you create a new doc, also add a line to `docs/README.md
 ## ➡️ What's Next? (Follow-ups)
 ```
 
+### 2.4 Plan Doc Template (`/plans/<Category>_NN_Descriptive_name.md`)
+
+See [`docs/COMMIT_CONVENTION.md`](./docs/COMMIT_CONVENTION.md) for the canonical template. Sections: Goal → Summary (with two TL;DR tables) → Commands → Files changed → Verification → Gotchas/decisions.
+
 ---
 
 ## 3. The App I'm Building — Buddies
 
-A cross-platform mobile trip planner built around the idea that **the best trips happen with friends**. Group trips, shared expenses, and shared memories are first-class citizens.
+A web-first trip planner built around the idea that **the best trips happen with friends**. Group trips, shared expenses, and shared memories are first-class citizens.
 
 ### Core Features (V1)
 
 1. **Trip Management with Smart Categorization** ⭐
    - Trips automatically categorized as **Past / Active / Upcoming / Drafts**
    - Home screen tabs/segmented control to filter
-   - Hero card showing countdown to next upcoming trip ("Goa in 12 days 🏝️")
+   - Hero card with countdown to next upcoming trip ("Goa in 12 days 🏝️")
    - "Active now" badge with subtle animation for trips happening today
    - Drafts: save trip without dates required, promote to full trip later
 
-2. **Invite Buddies via Email** ⭐ NEW
+2. **Invite Buddies via Email** ⭐
    - Trip owner invites buddies by email address
-   - Recipient gets an email with a deep link to join the trip
-   - If recipient has Buddies installed → opens app and shows accept/decline screen
-   - If not → email links to a landing page that prompts them to install
+   - Recipient gets an email with a magic link to join the trip
+   - If they're signed in → accept/decline screen
+   - If not → sign-in flow first, then accept/decline
    - Pending invitations visible in trip's members section
    - Re-send invitation, revoke pending invitation
 
@@ -222,9 +238,9 @@ A cross-platform mobile trip planner built around the idea that **the best trips
 4. **Place Insights from Web** ⭐
    - Each place auto-fetches a summary from Wikipedia (history, significance, photos)
    - Tied to user's preferred language
-   - "Learn About This Place" section on place detail screen
+   - "Learn About This Place" section on the place detail page
 
-5. **Photos** per place (gallery + camera)
+5. **Photos** per place (drag-and-drop or browser camera capture via `getUserMedia`)
 
 6. **Activities** at each place — title, price, priority, status
 
@@ -234,88 +250,80 @@ A cross-platform mobile trip planner built around the idea that **the best trips
 
 9. **Packing checklist** with templates
 
-10. **Staying plans** (hotels/airbnb/etc.)
+10. **Staying plans** (hotels/Airbnb/etc.)
 
 11. **Food plans** (restaurants, must-try dishes)
 
 12. **Group trips + bill splitting** (the heart of "Buddies")
 
-13. **Itinerary Day View — Timeline** ⭐ NEW
-    - For each trip, show a vertical timeline grouped by day
-    - Each day card displays: stays for that night, planned places (sorted by time), activities, meals, expenses summary
-    - Smooth scrollable view with sticky day headers
-    - Tap any item to jump to its detail screen
+13. **Itinerary Day View — Timeline** ⭐
+    - For each trip, vertical timeline grouped by day
+    - Each day card shows: stay for that night, planned places (sorted by time), activities, meals, expense summary
+    - Smooth scrollable view with sticky day headers (CSS `position: sticky`)
+    - Click any item → jump to its detail page
     - "Today" highlight when viewing during the trip
     - This is the showcase screen — the one users will screenshot and share
 
-14. **Offline Mode** ⭐ NEW
+14. **PWA + Offline-friendly reads** ⭐
+    - Installable web app (manifest + service worker)
     - Per-trip toggle: "Make available offline"
-    - When enabled: pre-cache trip data, all photos, place insights, member info
+    - When enabled: pre-cache trip data, photos, place insights, members
     - Network status indicator in app header (subtle)
-    - All read operations work offline; mutations queue and sync on reconnect
+    - Read operations work offline; mutations queue and sync on reconnect via background sync
     - "Last synced X mins ago" stamp on trip dashboard
-    - Storage usage per trip ("Goa trip — 128 MB cached")
-    - Settings option to clear offline data per trip
 
-15. **Reminders** with local notifications
+15. **Reminders** with web push notifications (or in-app fallback)
 
-16. **Language + theme** (i18n + light/dark)
+16. **Language + theme** (i18n + light/dark via `prefers-color-scheme`)
 
-17. **Travel music** (curated + local files)
+17. **Travel music** (curated YouTube/Spotify embeds + user playlists)
 
 ### Future Features
 
-See [`FUTURE_SCOPE.md`](./FUTURE_SCOPE.md) for the V2 playbook covering:
-- Quick-add expense via camera (OCR)
-- Smart packing suggestions based on destination + dates
-- Receipts + documents vault per trip
-- Buddy network (long-lived travel buddy connections)
-- Trip invitation with roles (full RBAC)
-- AI travel assistant chat
-- Language translator
-- Picture pose suggestions
+See [`FUTURE_SCOPE.md`](./FUTURE_SCOPE.md) for the V2 playbook.
 
 ---
 
 ## 4. Tech Stack (Locked)
 
-### Mobile App
-- **React Native via Expo** (managed workflow, latest SDK)
-- **TypeScript strict mode**
-- **Expo Router** (file-based routing)
-- **NativeWind** (Tailwind for RN)
-- **Zustand** for client state
-- **TanStack Query** for server state, with `@tanstack/react-query-persist-client` for offline cache
-- **React Hook Form + Zod** for forms
-- **MMKV** for local storage
-- **i18next + react-i18next** for languages
-- **NetInfo** (`@react-native-community/netinfo`) for network status detection
-- Expo modules: `expo-image-picker`, `expo-camera`, `expo-location`, `react-native-maps`, `expo-notifications`, `expo-av`, `expo-haptics`, `expo-image-manipulator`, `expo-secure-store`, `expo-file-system`
+A single Next.js 14 (App Router) app. UI and API live together; one deploy.
 
-### Backend
-- **Next.js 14+ App Router** with API routes
-- **Prisma + MongoDB**
+- **Next.js 14+** (App Router) — pages, layouts, route handlers, server actions
+- **TypeScript strict mode**
+- **Tailwind CSS** for styling
+- **Prisma + MongoDB** (Atlas free tier for dev)
 - **Better Auth** for authentication
 - **Cloudinary** for image uploads
-- **Resend** ⭐ NEW — email delivery for buddy invitations (free tier: 3000 emails/month)
-- **React Email** ⭐ NEW — JSX-based email templates
-- **Zod** validation on every endpoint
+- **Resend** + **React Email** for transactional email
+- **Zod** for validation (used by both server actions and route handlers)
+- **React Hook Form** for forms
+- **Zustand** for client-side state where Server Components aren't enough
+- **TanStack Query** — added if/when client-side cache + optimistic updates become necessary (deferred for now)
+- **i18next** — added when we have a real second locale to test against (deferred for now)
+- Deployment: **Vercel / Render / Fly.io** (decided per project; the app is host-agnostic)
 
-### 🔐 Why Better Auth (Not Clerk)?
+### 🔐 Why Better Auth (Not Clerk / NextAuth)?
 
-| Aspect | Better Auth | Clerk |
-|---|---|---|
-| Cost | **Free, open source, self-hosted** | Free tier limited |
-| Stack fit | **Native Prisma + MongoDB integration** | External service |
-| Mobile SDK | **`@better-auth/expo`** with SecureStore | `@clerk/clerk-expo` |
-| Authorization | **Built-in admin/RBAC plugins** for V2 | Tied to plan |
-| Lock-in | Zero — all data in your DB | All users on Clerk's servers |
+| Aspect              | Better Auth                                          | Clerk                          | NextAuth (Auth.js)                 |
+| ------------------- | ---------------------------------------------------- | ------------------------------ | ---------------------------------- |
+| Cost                | **Free, open source, self-hosted**                   | Free tier limited              | Free, self-hosted                  |
+| Stack fit           | **Native Prisma + MongoDB, simple Next.js wiring**   | External service               | Native Next.js, Prisma adapter     |
+| RBAC / admin        | **Built-in plugins for V2**                          | Tied to plan                   | Bring your own                     |
+| Lock-in             | Zero — all data in your DB                           | All users on Clerk's servers   | Zero                               |
+| Choice rationale    | Best mix for our stack                               | —                              | —                                  |
 
 ### 📧 Why Resend + React Email (for invitations)?
 
 - **Resend:** Modern email API, simple SDK, generous free tier (3000/month), great deliverability
 - **React Email:** Write email templates as JSX components — exactly what you already know
 - **Alternatives considered:** SendGrid (more setup, older API), AWS SES (cheap but config-heavy)
+
+### ⚡ Why server-first (RSC + Server Actions)?
+
+- **Server Components** by default — render data on the server, send only HTML + the components that need interactivity. Smaller bundles, faster Time-to-First-Byte.
+- **Server Actions** — write a server function and call it from a client component like an RPC. No `/api/something` boilerplate for simple mutations.
+- **Route handlers** — when you DO need a real HTTP endpoint (webhooks, third-party integrations, image upload signing), `app/api/<x>/route.ts` is the home.
+- **The mental model:** "what runs where?" Server Components run only on the server. Anything imported from a `"use client"` file runs in the browser. Everything else (server-only code, env secrets, db calls) stays server-side. Forget which is which and you'll see runtime errors fast.
 
 ---
 
@@ -330,137 +338,134 @@ See [`FUTURE_SCOPE.md`](./FUTURE_SCOPE.md) for the V2 playbook covering:
 #### **Day 1 — Setup & Mental Model Shift**
 
 Learning docs:
-- `day1_setup.md` — Why Expo, what it gives us vs bare React Native CLI
-- `day1_installation.md` — Node, Expo CLI, Android Studio, Xcode, Expo Go on phone
-- `day1_rn_vs_react.md` — The mental model shift: bridge, native modules, primitives
-- `day1_first_screen.md` — Hello Buddies screen with styled button
+- `day1_setup.md` — Why a single Next.js App Router app for UI + API
+- `day1_installation.md` — Node 20+, pnpm, MongoDB, Cloudinary, Resend accounts
+- `day1_app_router_vs_pages_router.md` — File conventions, where common Pages-Router instincts go wrong
+- `day1_first_page.md` — Hello Buddies page styled with Tailwind, `/api/health` route handler
 
 **Task doc:** `01_project_scaffolding.md`
 
-**Build:** Expo project with TypeScript, render styled "Hello Buddies" screen, run on physical phone via Expo Go.
+**Build:** Project at repo root with TypeScript strict, render styled "Hello Buddies" page, `/api/health` returns JSON. (Already done in `Infra_02`.)
 
 ---
 
-#### **Day 2 — Styling, Layout, NativeWind**
+#### **Day 2 — App Router & RSC Mental Model**
 
 Learning docs:
-- `day2_styling_basics.md` — `StyleSheet.create()`, inline styles, performance
-- `day2_flexbox_in_rn.md` — Flexbox-only layout, defaults differ from web
-- `day2_nativewind.md` — Tailwind for RN setup
-- `day2_safe_areas.md` — Notches, Dynamic Island, status bars
-- `day2_shadows_platform.md` — iOS vs Android shadow APIs
+- `day2_rsc_vs_client_components.md` — When to add `"use client"` and why
+- `day2_layouts_and_templates.md` — Nested layouts, segment groups `(auth)`/`(app)`
+- `day2_loading_and_error_files.md` — `loading.tsx`, `error.tsx`, streaming
+- `day2_metadata_api.md` — Per-page `metadata`, OpenGraph, dynamic titles
 
-**Task doc:** `02_theme_system.md`
+**Task doc:** `02_app_shell.md`
 
-**Build:** NativeWind setup, design tokens, reusable `<Card>` and `<Button>`, Trip Card UI.
+**Build:** Real app shell — `app/(auth)/sign-in/page.tsx`, `app/(app)/layout.tsx` with header + nav, `loading.tsx` skeletons, `error.tsx` boundaries.
 
 ---
 
-#### **Day 3 — Navigation with Expo Router**
+#### **Day 3 — Tailwind, Design Tokens, and Theme System**
 
 Learning docs:
-- `day3_navigation_overview.md` — Stack vs Tab vs Modal patterns
-- `day3_expo_router_basics.md` — File-based routing, parallels to Next.js App Router
-- `day3_route_params.md` — `useRouter()`, `useLocalSearchParams()`
-- `day3_deep_linking.md` — How `buddies://trip/123` works (also needed for invitations later)
+- `day3_tailwind_in_nextjs.md` — Tailwind config, content globs, JIT
+- `day3_design_tokens.md` — Why semantic colors, never raw hex
+- `day3_dark_mode.md` — `prefers-color-scheme` + a manual override stored in a cookie
+- `day3_responsive_layout.md` — Container queries, mobile-first breakpoints
 
-**Task doc:** `03_app_navigation_shell.md`
+**Task doc:** `03_theme_system.md`
 
-**Build:** Full app shell — `(auth)`, `(tabs)`, `trip/[id]/...` structure.
+**Build:** Design tokens, reusable `<Card>`/`<Button>`, Trip Card UI, dark mode toggle (with FOUC prevention via `cookies()` read).
 
 ---
 
 ### 🟡 PHASE 2 — Core App Plumbing (Days 4–6)
 
-#### **Day 4 — Forms, Lists, Local State + Trip Categorization** ⭐
+#### **Day 4 — Forms, Server Actions, Trip Categorization** ⭐
 
 Learning docs:
-- `day4_textinput_keyboard.md` — `<TextInput>` quirks, `KeyboardAvoidingView`
-- `day4_react_hook_form_rn.md` — RHF + Zod in RN
-- `day4_flatlist_vs_scrollview.md` — Why FlatList for any list >10 items
-- `day4_pull_to_refresh.md` — `<RefreshControl>` patterns
-- `day4_bottom_sheets.md` — `@gorhom/bottom-sheet` for modal forms
-- `day4_zustand_in_rn.md` — Same as web, with persistence
-- `day4_trip_status_logic.md` — Computed status (past/active/upcoming/draft) from dates
+- `day4_forms_in_app_router.md` — `<form action={serverAction}>` vs RHF + client submission
+- `day4_react_hook_form.md` — RHF + Zod, when controlled-input pain is worth it
+- `day4_useFormState_useFormStatus.md` — Pending state, validation echoes, progressive enhancement
+- `day4_lists_and_pagination.md` — Server-rendered list + client filters, when to paginate
+- `day4_trip_status_logic.md` — Computed status (past/active/upcoming/draft) from dates, locale-safe
 
 **Task docs:**
-- `04_create_trip_flow.md` — Bottom sheet form for new trip ("Save as Draft" option)
-- `05_trip_list_with_categories.md` — Home screen with segmented tabs, countdown hero card
+- `04_create_trip_flow.md` — Modal dialog form with "Save as Draft" option, server action mutation
+- `05_trip_list_with_categories.md` — Home screen with tabs, countdown hero card
 
 ---
 
-#### **Day 5 — Theme System + i18n**
+#### **Day 5 — i18n + Empty States + UX Polish**
 
 Learning docs:
-- `day5_dark_mode.md` — `useColorScheme()`, NativeWind dark mode config
-- `day5_theme_tokens.md` — Why semantic colors, never raw hex
-- `day5_i18n_setup.md` — i18next in RN, locale JSON files
-- `day5_mmkv_persistence.md` — Faster than AsyncStorage
-- `day5_settings_screen.md` — Theme toggle, language picker UX
+- `day5_i18n_options.md` — `next-intl` vs `i18next` vs simple JSON dictionaries — which fits a 2-locale app
+- `day5_empty_loading_error_states.md` — The three states every list/dashboard needs
+- `day5_skeleton_loaders.md` — Server-rendered skeletons via `loading.tsx`
+- `day5_settings_page.md` — Theme + language picker UX, persistence in user record
 
-**Task docs:** `06_theme_and_i18n_foundation.md`, `07_settings_screen.md`
+**Task docs:** `06_i18n_foundation.md`, `07_settings_page.md`
 
 ---
 
-#### **Day 6 — Backend Setup (Next.js + Prisma + MongoDB)**
+#### **Day 6 — Prisma + MongoDB**
 
 Learning docs:
-- `day6_nextjs_api_for_mobile.md` — How RN talks to Next.js API
-- `day6_expo_env_vars.md` — `EXPO_PUBLIC_` prefix, dev vs prod configs
-- `day6_prisma_mongodb_for_buddies.md` — Schema walkthrough
+- `day6_prisma_in_nextjs.md` — Where `PrismaClient` lives, the global-singleton pattern, server-only imports
+- `day6_mongodb_with_prisma.md` — ObjectId quirks, `@map("_id")`, indexes, why no migrations
+- `day6_prisma_seed_script.md` — Seeding dev data with `pnpm prisma db seed`
+- `day6_data_fetching_patterns.md` — Server Component DB queries vs route handlers vs server actions — when to use which
 
-**Task docs:** `08_backend_setup.md`, `09_trips_crud_api.md`
+**Task docs:** `08_db_setup.md`, `09_trips_crud.md`
+
+**Build:** Prisma client wired up, real Trip CRUD via server actions + Server Components, no in-memory state.
 
 ---
 
 ### 🟠 PHASE 3 — Auth + Wired Up (Day 7)
 
-#### **Day 7 — Better Auth + TanStack Query**
+#### **Day 7 — Better Auth**
 
 Learning docs:
-- `day7_better_auth_overview.md` — What it is, why over Clerk, architecture
-- `day7_better_auth_server_setup.md` — Install on Next.js, `auth.ts` config, Prisma adapter, schema generation via CLI
-- `day7_better_auth_expo_client.md` — `@better-auth/expo`, SecureStore, scheme config
-- `day7_email_password_flow.md` — Sign-up, sign-in, sign-out flows
-- `day7_protecting_routes.md` — Auth-gated `(tabs)` group, redirect to `/sign-in`
-- `day7_authenticated_requests.md` — Cookies/tokens flow from RN to Next.js
-- `day7_tanstack_query_rn.md` — TanStack Query setup with offline persistence (foundation for full offline mode in Day 14)
-- `day7_optimistic_updates.md` — What and when
+- `day7_better_auth_overview.md` — What it is, why over Clerk/NextAuth, architecture
+- `day7_better_auth_install.md` — `auth.ts` config, Prisma adapter, Better Auth schema generation via CLI
+- `day7_email_password_flow.md` — Sign-up, sign-in, sign-out, session cookies
+- `day7_protecting_pages.md` — Middleware-based gate vs `getSession()` in layouts; trade-offs
+- `day7_session_in_server_actions.md` — How a server action knows who the user is
+- `day7_oauth_extension.md` (optional) — Adding Google as a second provider
 
 **Task docs:**
-- `10_better_auth_server.md`
-- `11_better_auth_expo_client.md`
-- `12_protected_routes.md`
-- `13_trips_crud_wired.md`
+- `10_better_auth_server_setup.md`
+- `11_sign_in_sign_up_pages.md`
+- `12_protected_app_routes.md`
+- `13_trips_crud_user_scoped.md`
 
 **🎉 Milestone: signed-in user creating real trips persisting to MongoDB.**
 
 ---
 
-### 🔵 PHASE 4 — Mobile-Native Features (Days 8–10)
+### 🔵 PHASE 4 — Web-Native Features (Days 8–10)
 
-#### **Day 8 — Camera, Photos, Image Uploads**
+#### **Day 8 — Image Uploads with Cloudinary**
 
 Learning docs:
-- `day8_permissions_in_rn.md` — Info.plist, Android manifest, runtime requests
-- `day8_image_picker_vs_camera.md` — Gallery vs live capture
-- `day8_image_compression.md` — Why phones produce 10MB photos
-- `day8_uploading_to_cloudinary.md` — FormData, signed uploads
-- `day8_image_caching.md` — `expo-image` for performance
+- `day8_file_uploads_in_nextjs.md` — `<input type="file">`, FormData, server actions vs route handlers for uploads
+- `day8_cloudinary_signed_uploads.md` — Why server-signed uploads beat shipping the API secret
+- `day8_image_optimization.md` — `next/image`, Cloudinary transformations, responsive `srcSet`
+- `day8_drag_and_drop.md` — File-drop zones with `dataTransfer.files`
+- `day8_browser_camera.md` (optional) — `getUserMedia()` for capturing photos in-browser
 
 **Task docs:** `14_places_crud.md`, `15_place_photos.md`
 
 ---
 
-#### **Day 9 — Maps & Place Insights from Web** ⭐
+#### **Day 9 — Maps & Place Insights from Wikipedia** ⭐
 
 Learning docs:
-- `day9_react_native_maps_setup.md` — iOS/Android API keys, fallbacks
-- `day9_places_autocomplete.md` — Search → lat/lng auto-fill
-- `day9_markers_and_bounds.md` — Showing all trip places on one map
-- `day9_deep_linking_to_google_maps.md` — Platform-specific URL schemes
+- `day9_web_maps_options.md` — react-leaflet (free, OSM tiles) vs Mapbox GL JS vs Google Maps JS — pick one
+- `day9_places_autocomplete.md` — Google Places Autocomplete via the JS API (or alternative geocoders)
+- `day9_markers_and_bounds.md` — Showing all trip places on one map, fitting bounds
+- `day9_deep_link_to_google_maps.md` — `https://www.google.com/maps/?q=…` URL scheme
 - `day9_wikipedia_rest_api.md` — Wikipedia REST API, geosearch + summary, language variants
-- `day9_caching_strategy.md` — Why we cache insights server-side
+- `day9_caching_strategy.md` — Why we cache insights server-side via the `PlaceInsight` model
 
 **Task docs:**
 - `16_place_creation_with_maps.md`
@@ -477,15 +482,17 @@ Learning docs:
 
 ---
 
-#### **Day 10 — Local Notifications + Reminders**
+#### **Day 10 — Reminders + Web Push Notifications**
 
 Learning docs:
-- `day10_notifications_overview.md` — Local vs push, why we skip push in V1
-- `day10_notification_permissions.md` — iOS strict permissions flow
-- `day10_scheduling_notifications.md` — Exact, recurring, time zones
-- `day10_notification_handlers.md` — Foreground vs background vs tapped
+- `day10_web_push_overview.md` — Subscriptions, endpoints, VAPID keys
+- `day10_service_worker_basics.md` — Registering one, handling `push` events
+- `day10_permission_ux.md` — When to ask for notification permission (hint: not on first load)
+- `day10_in_app_reminders_fallback.md` — When the user denies notifications, gracefully fall back to in-app banners
 
 **Task doc:** `20_reminders_feature.md`
+
+> **Heads-up:** iOS Safari requires the user to install the app to the Home Screen before web-push works. Document the platform matrix in the task doc.
 
 ---
 
@@ -495,11 +502,11 @@ Learning docs:
 
 Learning docs:
 - `day11_currency_handling.md` — Multi-currency, conversion, caching rates
-- `day11_charts_in_rn.md` — `victory-native` for budget visualizations
+- `day11_charts_in_react.md` — Recharts vs visx vs nivo for budget visualizations
 - `day11_bill_splitting_algorithm.md` — Minimum-transactions settlement
-- `day11_resend_setup.md` ⭐ NEW — Resend account, API key, domain verification
-- `day11_react_email_templates.md` ⭐ NEW — Building JSX email templates
-- `day11_invitation_flow.md` ⭐ NEW — Token generation, deep link handling, accept/decline UX
+- `day11_resend_setup.md` — Resend account, API key, domain verification
+- `day11_react_email_templates.md` — Building JSX email templates
+- `day11_invitation_flow.md` — Token generation, magic-link landing page, accept/decline UX
 
 **Task docs:**
 - `21_expenses_crud.md`
@@ -507,18 +514,17 @@ Learning docs:
 - `23_group_members.md`
 - `24_bill_splitting.md`
 - `25_settlement_view.md`
-- `26_email_invitations_backend.md` ⭐ NEW
-- `27_email_invitations_ui.md` ⭐ NEW
+- `26_email_invitations_backend.md`
+- `27_email_invitations_ui.md`
 
 **Email Invitation flow:**
 1. Trip owner taps "Invite buddy" in members section
 2. Enters email + selects role (default: member)
 3. Backend creates `TripInvitation` (token, email, tripId, role, expiresAt = +7 days)
-4. Backend sends email via Resend with deep link: `buddies://invite/<token>` (web fallback URL too)
-5. Recipient taps link
-   - App installed + signed in → accept/decline screen
-   - App installed + not signed in → sign in first, then accept/decline
-   - App not installed → web landing page with install CTAs
+4. Backend sends email via Resend with link: `https://buddies.app/invite/<token>`
+5. Recipient clicks link
+   - Signed in → accept/decline page
+   - Not signed in → sign-in flow first, then accept/decline
 6. On accept → user added as `TripMember`, invitation status updated
 7. Owner sees pending/accepted/declined badges in members list
 8. Owner can re-send (if pending) or revoke (if pending)
@@ -528,8 +534,8 @@ Learning docs:
 #### **Day 12 — Logistics Features + Music**
 
 Learning docs:
-- `day12_audio_playback.md` — `expo-av`, lock-screen controls
-- `day12_haptics.md` — `expo-haptics` UX touches
+- `day12_audio_embeds.md` — YouTube IFrame API and Spotify Embed for playlists
+- `day12_drag_and_drop_lists.md` — `dnd-kit` for re-orderable items (packing list, itinerary)
 
 **Task docs:** `28_activities.md`, `29_stays.md`, `30_meals.md`, `31_packing_checklist.md`, `32_music_player.md`
 
@@ -537,21 +543,21 @@ Learning docs:
 
 ---
 
-#### **Day 13 — Itinerary Timeline View** ⭐ NEW (the showcase screen)
+#### **Day 13 — Itinerary Timeline View** ⭐ (the showcase page)
 
 Learning docs:
-- `day13_complex_layouts.md` — Vertical timelines in RN, sticky headers, custom layouts
+- `day13_complex_layouts.md` — Vertical timelines on the web, sticky headers via `position: sticky`
 - `day13_data_aggregation.md` — Combining places, stays, meals, activities, expenses by day
-- `day13_section_list.md` — `<SectionList>` for grouped data with sticky headers
-- `day13_animations_basics.md` — Reanimated 3 fundamentals for smooth interactions
+- `day13_view_transitions_api.md` — `view-transition-name` for smooth navigation between list and detail
+- `day13_animations_basics.md` — Framer Motion fundamentals (or pure CSS) for tasteful motion
 
 **Task docs:**
 - `33_itinerary_timeline_data_layer.md` — Aggregation service that builds day-by-day structure
-- `34_itinerary_timeline_ui.md` — The timeline screen itself
+- `34_itinerary_timeline_ui.md` — The timeline page itself
 - `35_itinerary_today_highlight.md` — "Today" auto-scroll + visual emphasis when viewing during the trip
 
-**Timeline Screen Spec:**
-- New screen at `app/trip/[id]/itinerary.tsx`
+**Timeline Page Spec:**
+- New page at `app/(app)/trip/[id]/itinerary/page.tsx`
 - Top tab on trip dashboard: Overview | **Itinerary** | Places | Expenses | …
 - Vertical scrollable timeline with sticky day headers (Day 1, Day 2, …)
 - Each day card shows in this order:
@@ -560,38 +566,38 @@ Learning docs:
   - Afternoon meals → Places → Activities
   - Evening meals → Places → Activities
   - Day expense summary (₹ spent today)
-- Tap any item → navigate to its detail screen
+- Click any item → navigate to its detail page
 - Empty day → "No plans yet — add something!"
 - "Today" auto-scrolls into view when trip is active
 - Subtle vertical line connecting items, with colored dots per category (place=blue, meal=orange, activity=purple, stay=green)
 
 ---
 
-#### **Day 14 — Offline Mode** ⭐ NEW
+#### **Day 14 — PWA + Offline-Friendly Reads** ⭐
 
 Learning docs:
-- `day14_offline_overview.md` — What "offline-first" actually means, our scope for V1
-- `day14_netinfo.md` — Detecting network state with `@react-native-community/netinfo`
-- `day14_query_persistence.md` — `@tanstack/react-query-persist-client` deep dive
-- `day14_image_precaching.md` — `expo-image` prefetch + `expo-file-system` for explicit downloads
-- `day14_mutation_queueing.md` — Queuing writes offline and replaying on reconnect
-- `day14_offline_ux.md` — Visual patterns: stale data badges, sync timestamps, network banner
+- `day14_pwa_overview.md` — Manifest, install prompt, what "installable" actually means
+- `day14_service_workers.md` — Lifecycle, cache strategies (cache-first, network-first, stale-while-revalidate)
+- `day14_workbox_or_next_pwa.md` — `next-pwa` plugin vs hand-rolled Workbox
+- `day14_background_sync.md` — Queueing mutations offline, replaying on reconnect
+- `day14_offline_ux.md` — Visual patterns: stale-data badges, sync timestamps, offline banner
+- `day14_image_caching.md` — Caching Cloudinary images via the service worker for offline trip browsing
 
 **Task docs:**
-- `36_offline_infrastructure.md` — TanStack Query persistence + NetInfo + mutation queue
-- `37_per_trip_offline_toggle.md` — "Make available offline" toggle UI + backend orchestration
-- `38_offline_storage_management.md` — Per-trip storage usage display + clear cache action
+- `36_pwa_baseline.md` — Manifest + service worker + install button
+- `37_per_trip_offline_toggle.md` — "Make available offline" toggle UI + cache pre-warming
+- `38_offline_storage_management.md` — Per-trip cache size display + clear-cache action
 
-**Offline Mode Spec:**
+**PWA Offline Spec:**
 - **Three layers of offline support:**
-  1. **Always-on baseline** — TanStack Query persists all queries to MMKV; recently viewed data works offline by default
-  2. **Per-trip explicit download** — User toggles "Make available offline" on a trip
-     - Pre-fetches: trip data, all places, all photos (via `expo-image` prefetch), place insights, members, expenses, packing items, stays, meals, reminders
+  1. **Always-on baseline** — service worker caches recently viewed pages and their images; recently visited trips work offline by default
+  2. **Per-trip explicit pre-cache** — User toggles "Make available offline" on a trip
+     - Pre-fetches: trip data, all places, all photos (forced through the SW cache), place insights, members, expenses, packing items, stays, meals, reminders
      - Shows download progress
      - Marks trip with offline icon in trip list
-     - Re-syncs daily when online
+     - Re-syncs daily when online (background sync)
   3. **Mutation queue** — Writes (add expense, mark place visited, etc.) queue when offline, replay when reconnected
-- **Network status indicator** — subtle banner at top of screen when offline
+- **Network status indicator** — subtle banner at top when offline
 - **Last synced timestamp** — small label on trip dashboard
 - **Storage usage** — in Settings, show per-trip cache size with "Clear" button
 - **V1 scope limit:** map tile offline caching is NOT included (deferred to V2 — needs Mapbox or different map library)
@@ -603,8 +609,8 @@ Learning docs:
 **Task doc:** `39_v2_scaffolding.md`
 
 Scaffold (don't build) all V2 features per [`FUTURE_SCOPE.md`](./FUTURE_SCOPE.md):
-- Feature flags via `featureFlags.ts` config
-- Stub screens for each future feature
+- Feature flags via `lib/featureFlags.ts` config
+- Stub pages for each future feature
 - Schema sketches (commented out in Prisma) ready for migration
 - Reference to FUTURE_SCOPE.md from `docs/README.md`
 
@@ -690,12 +696,8 @@ model Trip {
   isGroupTrip   Boolean  @default(false)
   isDraft       Boolean  @default(false)
 
-  // ⭐ NEW — Offline mode
-  isAvailableOffline Boolean   @default(false)
-  lastSyncedAt       DateTime?
-
   members       TripMember[]
-  invitations   TripInvitation[]      // ⭐ NEW
+  invitations   TripInvitation[]
   places        Place[]
   stays         Stay[]
   meals         Meal[]
@@ -717,7 +719,6 @@ model TripMember {
   joinedAt  DateTime @default(now())
 }
 
-// ⭐ NEW — Email invitations
 model TripInvitation {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   tripId      String   @db.ObjectId
@@ -882,7 +883,7 @@ model Reminder {
   recurring      String   @default("none")
   priority       String   @default("medium")
   isDone         Boolean  @default(false)
-  notificationId String?
+  pushSubscriptionId String?       // for web-push delivery; null = in-app only
 }
 ```
 
@@ -896,12 +897,13 @@ These rules apply to **every single response**:
 2. **Inside a day, follow this order:**
    - Create the relevant **learning doc(s)** first with WHAT/WHY/HOW filled in
    - Pause: "Read the learning doc. Any questions before we start coding?"
-   - Wait for me to confirm
+   - Wait for confirmation
    - Create the **task doc** with plan + acceptance criteria
    - Pause: "Plan look good? Approve to proceed."
    - Implement code, updating the task doc as you go
    - At the end, fill in the task doc's "How I Tested It" and "Code Highlights" sections
    - Update `docs/README.md` master index
+   - **Write the matching `plans/<commit-name>.md` file** — every commit gets one
    - End-of-day: mini-quiz + preview of next day
 3. **When I hit an error:**
    - Create a **bug doc immediately** with What Happened + Trying To Do filled
@@ -909,22 +911,23 @@ These rules apply to **every single response**:
    - Once resolved, fill in Root Cause + Solution + How to Avoid
    - Update master index
 4. **WHAT/WHY/HOW for everything.** No skipping.
-5. **Always compare to React/Next.js** when there's a parallel.
-6. **Call out gotchas explicitly**, especially iOS vs Android differences.
+5. **Anchor new mental models** to React/Next.js when there's a parallel.
+6. **Call out gotchas explicitly** — especially around RSC vs client component, hydration, env-var prefixes, server-only imports.
 7. **Mini-quiz at end of every day** — 3–5 questions.
 
 ---
 
 ## 8. Definition of Done (every feature)
 
-- [ ] Works on both iOS and Android
+- [ ] Works at desktop and mobile breakpoints
 - [ ] TypeScript-strict, no `any`
 - [ ] Zod-validated forms with friendly errors
-- [ ] Loading + error + empty states handled
+- [ ] Loading + error + empty states handled (`loading.tsx`/`error.tsx` where it makes sense)
 - [ ] Theme-aware (light + dark)
 - [ ] Localized (no hardcoded English)
-- [ ] Accessibility labels on interactive elements
-- [ ] Tested manually on a real device
+- [ ] Keyboard-navigable, semantic HTML, ARIA where needed
+- [ ] Tested manually in Chrome and Safari (and Firefox if you're feeling thorough)
+- [ ] **Plan doc completed at `plans/<commit-name>.md` and committed atomically with the change**
 - [ ] **Task doc completed and linked from master index**
 - [ ] **Any bugs encountered have bug docs**
 - [ ] **All concepts used have learning docs**
@@ -941,8 +944,8 @@ When I say **"Day 1, go"**, do these in order:
 - Wait for my green light
 
 ### Step 2 — Scaffold the docs folder FIRST
-- Create `/docs` folder structure
-- Create `docs/README.md` master index (with link to FUTURE_SCOPE.md)
+- Confirm `/docs` folder structure exists (or create it)
+- Confirm `docs/README.md` master index exists (or create it, with link to FUTURE_SCOPE.md)
 - Note that `FUTURE_SCOPE.md` already exists at the project root
 - Create the first learning doc: `docs/learning/day1_setup.md`
 - Create the second learning doc: `docs/learning/day1_installation.md`
@@ -950,50 +953,40 @@ When I say **"Day 1, go"**, do these in order:
 
 ### Step 3 — Then the project
 - Create the task doc: `docs/task/01_project_scaffolding.md`
-- Walk me through `npx create-expo-app buddies` step-by-step explaining every flag
-- Set up TypeScript strict
-- Run on my phone via Expo Go to confirm everything works
+- Walk me through the project state (Next.js already scaffolded in `Infra_02`) — explain what each config file does
+- Confirm `pnpm dev` works and `localhost:3000` + `localhost:3000/api/health` both respond
 - Update master index
 
 ### Step 4 — End of Day 1
-- Create `docs/learning/day1_rn_vs_react.md` summarizing what I learned
+- Create `docs/learning/day1_first_page.md` summarizing what landed
 - Mini-quiz
 - Preview Day 2
 
-```markdown
-8. **Commit messages follow our convention.** When generating commit messages or wrapping up a task, ALWAYS follow the convention in [`docs/COMMIT_CONVENTION.md`](./docs/COMMIT_CONVENTION.md):
+### Commit conventions
 
-   - **Format:** `<type>(<scope>): <short description>`
-   - **Types:** `feat`, `fix`, `docs`, `chore`, `style`, `refactor`, `test`, `perf`
-   - **Scopes:** Use `dayN/taskNN` for feature work, `dayN/bugNN` for bug fixes, `dayN` for day-level docs/chores, `infra` for repo-level changes
-   - **Description rules:** lowercase, imperative mood, no trailing period, ≤72 chars total
-   - **Body:** Add a bulleted body for non-trivial commits explaining what + why (not how)
-   - **Footer:** Add `closes #N` when the work matches a GitHub issue
+Always follow [`docs/COMMIT_CONVENTION.md`](./docs/COMMIT_CONVENTION.md):
 
-   **Examples to follow:**
-   ```
-   feat(day4/task05): add trip list with categorized tabs
-   fix(day3/bug02): resolve expo router type errors on android
-   docs(day7): add better auth overview and protected routes
-   chore(infra): configure github actions ci pipeline
-   ```
+- **Format:** `<Category>_NN_Descriptive_name`
+- **Categories:** `Infra`, `Day`, `Feat`, `Fix`, `Docs`
+- **NN:** zero-padded two-digit, monotonic per category (`01`, `02`, …, `10`, `11`)
+- **Plan file:** every commit ships with a matching `plans/<commit-name>.md` written **first** and committed atomically with the change
 
-   At the end of every task, propose a commit message using this convention BEFORE running `git commit`. Wait for my approval. If I approve, run the commit. If I want changes, revise and re-propose.
-```
-
+At the end of every task, propose a commit message using this convention BEFORE running `git commit`. Wait for my approval. If I approve, run the commit. If I want changes, revise and re-propose.
 
 ---
 
 ## 10. Ground Rules I Want You to Honor
 
-- ✅ Never assume I know something specific to React Native — explain it
-- ✅ Always create docs before/during work, never after as an afterthought
+- ✅ Never assume I know something specific to the App Router — explain it
+- ✅ Always create docs (plan + learning + task) before/during work, never after as an afterthought
 - ✅ When you make a tech choice, document the **alternatives you considered** and why you rejected them
 - ✅ When I make a mistake or seem confused, slow down and re-explain
-- ✅ When something is iOS-specific or Android-specific, label it clearly with platform icons (📱 iOS / 🤖 Android)
+- ✅ Label browser-specific quirks clearly (📘 Chrome / 🔵 Firefox / 🟢 Safari) when relevant
+- ✅ Call out the runtime explicitly when it matters (Server Component / Client Component / Server Action / Edge Route Handler / Node Route Handler)
 - ❌ Never write code without a task doc backing it
 - ❌ Never let me proceed past a concept I haven't confirmed I understand
 - ❌ Never solve a bug silently — always create the bug doc
+- ❌ Never commit without writing the matching plan file first
 
 ---
 
