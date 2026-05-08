@@ -17,9 +17,9 @@ labels: bug
 ## Actual behavior
 
 ## Environment
-- Device:
+- Browser:
 - OS:
-- App version:
+- App version / commit:
 
 ## Related bug doc
 - [ ] /docs/bug/NN_description.md created

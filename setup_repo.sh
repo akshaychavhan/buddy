@@ -2,15 +2,19 @@
 # ==========================================================
 # Buddies — Repository Setup Script
 # ==========================================================
-# Run this AFTER:
-#   1. Creating the empty repo on github.com (with README + .gitignore + LICENSE)
-#   2. Cloning it locally
-#   3. Saving these 5 files in the cloned folder:
-#      - PROMPT.md
-#      - FUTURE_SCOPE.md
-#      - README.md          (overwrite the auto-generated one)
-#      - .gitignore         (overwrite the auto-generated one)
-#      - docs_README.md     (will be moved to docs/README.md)
+# Optional helper for fresh forks/clones. Idempotent — safe to re-run.
+#
+# What it sets up:
+#   - docs/ folder structure (learning, bug, task)
+#   - plans/ folder (per-commit notes — created if missing)
+#   - .github/ISSUE_TEMPLATE/* (bug, feature, task)
+#   - .github/workflows/ directory (the actual ci.yml is committed in version control)
+#   - LICENSE (MIT, only if missing)
+#
+# Run AFTER cloning. Then:
+#   pnpm install
+#   cp .env.example .env.local   # fill in your secrets
+#   pnpm dev
 # ==========================================================
 
 set -e  # exit on error
@@ -19,11 +23,10 @@ echo "🧳 Setting up Buddies project structure..."
 
 # ---------- Folder Structure ----------
 echo "📁 Creating folder structure..."
-mkdir -p apps/mobile
-mkdir -p apps/api
 mkdir -p docs/learning
 mkdir -p docs/bug
 mkdir -p docs/task
+mkdir -p plans
 mkdir -p .github/ISSUE_TEMPLATE
 mkdir -p .github/workflows
 
@@ -35,8 +38,6 @@ fi
 
 # ---------- Placeholder files so empty folders are committed ----------
 echo "📝 Adding .gitkeep placeholders..."
-touch apps/mobile/.gitkeep
-touch apps/api/.gitkeep
 touch docs/learning/.gitkeep
 touch docs/bug/.gitkeep
 touch docs/task/.gitkeep
@@ -64,9 +65,9 @@ labels: bug
 ## Actual behavior
 
 ## Environment
-- Device:
+- Browser:
 - OS:
-- App version:
+- App version / commit:
 
 ## Related bug doc
 - [ ] /docs/bug/NN_description.md created
@@ -115,34 +116,6 @@ labels: task
 ## Dependencies
 EOF
 
-# ---------- GitHub Actions: basic CI (placeholder) ----------
-echo "⚙️  Creating GitHub Actions workflow stub..."
-cat > .github/workflows/ci.yml << 'EOF'
-# Buddies — Continuous Integration
-# This workflow runs on every push and pull request.
-# It will be expanded as the project grows (typecheck, lint, test).
-
-name: CI
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
-jobs:
-  placeholder:
-    name: Placeholder
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Project structure check
-        run: |
-          echo "✅ Repo structure check passed"
-          ls -la
-EOF
-
 # ---------- LICENSE (MIT) ----------
 if [ ! -f "LICENSE" ]; then
   echo "📜 Creating MIT License..."
@@ -174,7 +147,7 @@ fi
 
 # ---------- Status ----------
 echo ""
-echo "✅ Buddies project structure created!"
+echo "✅ Buddies project structure ready!"
 echo ""
 echo "📂 Final structure:"
 echo "    buddies/"
@@ -183,11 +156,12 @@ echo "    ├── PROMPT.md"
 echo "    ├── FUTURE_SCOPE.md"
 echo "    ├── LICENSE"
 echo "    ├── .gitignore"
-echo "    ├── apps/"
-echo "    │   ├── mobile/      (Expo app — Day 1)"
-echo "    │   └── api/         (Next.js API — Day 6)"
+echo "    ├── package.json"
+echo "    ├── app/                    (Next.js App Router)"
+echo "    ├── prisma/                 (schema)"
+echo "    ├── plans/                  (one note per commit)"
 echo "    ├── docs/"
-echo "    │   ├── README.md    (master index)"
+echo "    │   ├── README.md           (master index)"
 echo "    │   ├── learning/"
 echo "    │   ├── bug/"
 echo "    │   └── task/"
@@ -196,11 +170,10 @@ echo "        ├── ISSUE_TEMPLATE/"
 echo "        └── workflows/"
 echo ""
 echo "🚀 Next steps:"
-echo "    1. Review the structure: ls -la"
-echo "    2. Stage all files:      git add ."
-echo "    3. Commit:               git commit -m 'chore: initial project structure and documentation'"
-echo "    4. Push to GitHub:       git push origin main"
+echo "    1. Install deps:           pnpm install"
+echo "    2. Set up env vars:        cp .env.example .env.local   (and edit)"
+echo "    3. Generate Prisma client: pnpm prisma:generate"
+echo "    4. Run dev server:         pnpm dev"
 echo ""
-echo "Then in Cursor, open the buddies folder and send Claude:"
-echo '    "Read PROMPT.md and FUTURE_SCOPE.md. Then begin: Day 1, go."'
+echo "Then visit http://localhost:3000 — and check /api/health for the JSON sanity check."
 echo ""
