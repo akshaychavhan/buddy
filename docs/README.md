@@ -19,7 +19,9 @@ For the build & learning prompt for AI assistants, see [`../PROMPT.md`](../PROMP
 
 ### Phase 1 — Foundations
 
-_(empty — will be populated as Day 1 begins)_
+**Day 1 — Setup & Mental Model Shift**
+- [Day 1 — Project Setup: Why Expo](./learning/day1_setup.md)
+- [Day 1 — Installation: Tooling Checklist](./learning/day1_installation.md)
 
 ### Phase 2 — Core App Plumbing
 
@@ -74,7 +76,7 @@ For V2 features and beyond, see [`FUTURE_SCOPE.md`](../FUTURE_SCOPE.md):
 
 | Phase | Day | Status | Notes |
 |---|---|---|---|
-| 1 | Day 1 — Setup & Mental Model Shift | ⏸️ Not started | |
+| 1 | Day 1 — Setup & Mental Model Shift | 🔄 In progress | Learning docs done; task scaffolding next |
 | 1 | Day 2 — Styling & NativeWind | ⏸️ Not started | |
 | 1 | Day 3 — Navigation | ⏸️ Not started | |
 | 2 | Day 4 — Forms & Trip Categorization | ⏸️ Not started | |
