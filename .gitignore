@@ -15,31 +15,6 @@ build/
 out/
 .next/
 .turbo/
-.expo/
-.expo-shared/
-web-build/
-
-# ==========================
-# Native build artifacts
-# ==========================
-*.jks
-*.p8
-*.p12
-*.key
-*.mobileprovision
-*.orig.*
-ios/Pods/
-ios/build/
-ios/.xcode.env.local
-android/app/build/
-android/build/
-android/.gradle/
-android/local.properties
-android/app/release/
-android/app/debug/
-*.apk
-*.aab
-*.ipa
 
 # ==========================
 # Environment files
@@ -56,15 +31,8 @@ android/app/debug/
 .env*.local
 
 # ==========================
-# Expo specific
-# ==========================
-.expo/
-*.jsbundle
-
-# ==========================
 # Next.js specific
 # ==========================
-.next/
 next-env.d.ts
 
 # ==========================
@@ -74,6 +42,11 @@ next-env.d.ts
 # but DO commit migration files themselves
 .prisma/
 prisma/.env
+
+# ==========================
+# Deployment hosts (no-op if you don't use them)
+# ==========================
+.vercel/
 
 # ==========================
 # Logs
