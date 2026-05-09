@@ -74,10 +74,10 @@ Three options to evaluate when implementing:
 - **Cons:** Paid (~$1.50 per 1000 images, free tier 1000/month), needs server-side proxy to hide API key
 - **Recommendation:** Best for production
 
-### Option B — On-device OCR via `expo-text-recognition` or `react-native-text-recognition`
-- **Pros:** Free, fast, privacy-friendly, works offline
-- **Cons:** Lower accuracy especially on faded receipts; English-heavy
-- **Recommendation:** Best for V2.0 launch, switch to cloud later if needed
+### Option B — In-browser OCR via `tesseract.js`
+- **Pros:** Free, runs entirely in the browser (no backend cost), privacy-friendly, works offline (with the WASM bundle cached by the service worker)
+- **Cons:** Lower accuracy on faded receipts; English-heavy; first-load downloads ~2MB of WASM
+- **Recommendation:** Best for V2.0 launch — lazy-load Tesseract only when the user opens the receipt scanner. Switch to cloud later if accuracy becomes a problem.
 
 ### Option C — Anthropic Claude Vision API
 - **Pros:** Excellent at structured extraction with prompts; handles messy receipts well
@@ -110,30 +110,30 @@ model ExpenseLineItem {
 
 ## UI/UX Sketch
 
-1. **FAB (floating action button)** on Expenses screen with camera icon
-2. Tap → Camera opens (full-screen)
-3. Auto-detect rectangle (like a document scanner) and capture
-4. Loading overlay: "Reading your receipt…"
-5. **Pre-filled expense form** appears in bottom sheet:
+1. **"Scan receipt" button** in the Expenses page header (and a quick-action shortcut from the trip dashboard)
+2. Click → modal opens with two options: **Upload a photo** (`<input type="file" accept="image/*" capture="environment">`) or **Use camera** (live `getUserMedia()` preview)
+3. Selecting a file or capturing a frame → image preview with a "Use this photo" CTA
+4. Loading overlay: "Reading your receipt…" (Tesseract running in the browser, or upload to `/api/expenses/ocr-extract` if cloud OCR is configured)
+5. **Pre-filled expense form** appears in the same modal:
    - Amount: ₹1,247 *(with confidence indicator if low)*
    - Date: Today *(auto)*
    - Merchant: "Cafe Mocha" *(from OCR)*
    - Category: Food *(guessed from merchant — show suggestions)*
-   - Receipt: thumbnail with "Retake" option
-6. User reviews → taps Save
+   - Receipt: thumbnail with "Replace" option
+6. User reviews → clicks Save
 7. Receipt image stored in Cloudinary; URL saved on expense
 
 ## Tasks Breakdown
 
-1. Backend: integrate OCR provider (start with on-device, server fallback)
-2. Backend: `POST /api/expenses/ocr-extract` endpoint
-3. Backend: merchant → category guessing (rule-based dictionary)
-4. Mobile: Camera screen with document detection
-5. Mobile: Loading + extraction state
-6. Mobile: Pre-filled expense form variant
-7. Mobile: Confidence indicators on uncertain fields
-8. Mobile: Retake/cancel flows
-9. Edge cases: blurry image, no receipt detected, multi-currency
+1. Backend: integrate OCR provider (start with in-browser Tesseract.js, server fallback via `/api/expenses/ocr-extract` for cloud OCR)
+2. Backend: `POST /api/expenses/ocr-extract` route handler — accepts an image, returns structured fields
+3. Backend: merchant → category guessing (rule-based dictionary, lives in `lib/expenses/category-guess.ts`)
+4. Frontend: receipt-scanner modal with file upload + live camera (`getUserMedia()`) options
+5. Frontend: loading + extraction state with progress
+6. Frontend: pre-filled expense form variant
+7. Frontend: confidence indicators on uncertain fields
+8. Frontend: replace/cancel flows
+9. Edge cases: blurry image, no receipt detected, multi-currency, Safari quirks for `getUserMedia()`
 
 ## Open Questions
 
@@ -214,23 +214,23 @@ model SuggestionFeedback {
 
 ## UI/UX Sketch
 
-1. On Packing screen, if no items yet OR after user adds first item: show banner *"Get suggestions based on your trip ✨"*
-2. Tap → bottom sheet opens with categorized suggestions:
-   - **For cold weather (Manali, Dec):** thermal wear, gloves… *(toggle each)*
-   - **For trekking activities:** hiking boots, headlamp… *(toggle each)*
-   - **General travel essentials:** charger, ID copies… *(toggle each)*
+1. On the Packing page, if no items yet OR after user adds first item: show banner *"Get suggestions based on your trip ✨"*
+2. Click → modal dialog opens with categorized suggestions:
+   - **For cold weather (Manali, Dec):** thermal wear, gloves… *(checkbox each)*
+   - **For trekking activities:** hiking boots, headlamp… *(checkbox each)*
+   - **General travel essentials:** charger, ID copies… *(checkbox each)*
 3. "Add Selected (12 items)" button at bottom
-4. Items added with subtle "✨ suggested" tag in the list (user can dismiss)
+4. Items added with subtle "✨ suggested" badge in the list (user can dismiss)
 
 ## Tasks Breakdown
 
-1. Backend: climate detection service (Open-Meteo integration)
+1. Backend: climate detection service (Open-Meteo integration), lives in `lib/packing/climate.ts`
 2. Backend: destination type classification (rule-based)
-3. Backend: suggestion engine with JSON config
-4. Backend: `GET /trips/:id/packing-suggestions` endpoint
-5. Mobile: empty state + banner UI on packing screen
-6. Mobile: suggestions bottom sheet with multi-select
-7. Mobile: bulk-add flow + visual indicator on suggested items
+3. Backend: suggestion engine with JSON config (`lib/packing/suggestions.json`)
+4. Backend: `GET /api/trips/:id/packing-suggestions` route handler (or a server action returning the same shape)
+5. Frontend: empty state + banner UI on packing page
+6. Frontend: suggestions modal dialog with multi-select
+7. Frontend: bulk-add flow + visual indicator on suggested items
 8. Optional: feedback tracking for future personalization
 
 ## Open Questions
@@ -271,10 +271,10 @@ Categorized, searchable, and downloadable offline.
 ## Tech Approach
 
 - **File upload:** reuse existing Cloudinary integration (extend to support PDFs, not just images)
-- **PDF preview:** `react-native-pdf` or `expo-pdf` for in-app viewing
-- **Offline access:** when "Make available offline" is toggled (V1 feature), pre-download all documents to `expo-file-system` document directory
-- **Encryption (passport, ID docs):** AES-256 encrypt on device with user's passcode/biometric before upload
-- **OCR-based search (V2.1):** extract text from PDFs/images so user can search "BLR-DEL flight" and find the ticket
+- **PDF preview:** `react-pdf` (or a simple `<embed src="…" type="application/pdf">` for browsers that support inline PDF rendering)
+- **Offline access:** when "Make available offline" is toggled (V1 feature), pre-cache all document URLs through the service worker
+- **Encryption (passport, ID docs):** AES-256 encrypt in the browser via `crypto.subtle` (Web Crypto API) using a key derived from a user passphrase, before upload. Only the encrypted bytes hit Cloudinary.
+- **OCR-based search (V2.1):** extract text from PDFs/images server-side so user can search "BLR-DEL flight" and find the ticket
 
 ## Data Model
 
@@ -318,34 +318,34 @@ model Trip {
 ## UI/UX Sketch
 
 1. New top tab on Trip dashboard: Overview | Itinerary | Places | **Documents** | Expenses | …
-2. Documents screen:
+2. Documents page:
    - Categorized sections: Tickets / Hotels / IDs / Insurance / Other
    - Each item shows: icon, name, category badge, file size, validity (if any)
-   - Tap → in-app PDF/image viewer
-   - Long-press → share, download, delete
-3. **FAB** "Upload document"
-4. Upload flow: pick file → enter name → select category → optional expiry → upload
+   - Click → in-app PDF/image viewer (modal or new route)
+   - Right-click / overflow menu → share, download, delete
+3. **"Upload document"** button in the page header
+4. Upload flow: file picker (`<input type="file">` accepting `.pdf`/images) → enter name → select category → optional expiry → upload
 5. **Expiry alerts:** if visa/insurance expires within 30 days, badge shows on dashboard
-6. **Offline indicator:** docs available offline (when trip is downloaded) show download icon
+6. **Offline indicator:** docs cached by the service worker show a small "available offline" icon
 
 ## Tasks Breakdown
 
-1. Backend: TripDocument model + migration
-2. Backend: upload endpoint with multer / formidable + Cloudinary PDF support
-3. Backend: list/get/update/delete endpoints
+1. Backend: TripDocument model + Prisma client update
+2. Backend: upload route handler — `app/api/trips/[id]/documents/route.ts` — handle multipart form data, push to Cloudinary (PDFs supported via the same upload preset)
+3. Backend: list/get/update/delete route handlers (or server actions where simpler)
 4. Backend: signed URL generation for private docs
-5. Mobile: Documents screen with category sections
-6. Mobile: Upload flow (file picker via `expo-document-picker`)
-7. Mobile: PDF viewer integration
-8. Mobile: Image viewer for non-PDF docs
-9. Mobile: Encryption flow for sensitive docs (V2.1 — optional)
-10. Mobile: Expiry tracking + dashboard badges
-11. Mobile: Offline pre-download integration with V1 offline mode
-12. Mobile: Search across docs (V2.1)
+5. Frontend: Documents page with category sections
+6. Frontend: upload flow with `<input type="file">` and a server action mutation
+7. Frontend: PDF viewer (`react-pdf` or `<embed>`)
+8. Frontend: image viewer for non-PDF docs
+9. Frontend: Web Crypto encryption flow for sensitive docs (V2.1 — optional)
+10. Frontend: expiry tracking + dashboard badges
+11. Frontend: service-worker pre-cache integration with V1 PWA offline mode
+12. Frontend: full-text search across docs (V2.1)
 
 ## Open Questions
 
-- Should Cloudinary be the right host for sensitive docs (passports)? Consider AWS S3 with KMS encryption for V2.1.
+- Should Cloudinary be the right host for sensitive docs (passports)? Consider AWS S3 with KMS encryption for V2.1, or rely on Web Crypto encryption-at-rest before upload.
 - Allow group members to upload docs to shared trips, or only owner?
 - Auto-categorization via filename patterns ("flight_BLR_GOA.pdf" → category: flight)?
 
@@ -422,31 +422,31 @@ model User {
 
 ## UI/UX Sketch
 
-1. **New tab** in main bottom tab bar: Trips | Buddies | Music | Profile
-2. **Buddies tab** layout:
-   - Top section: "Your travel buddies" — horizontal scroll of avatars with names
-   - Each buddy → tap → buddy detail screen with:
+1. **New nav item** in the app header / sidebar: Trips | Buddies | Music | Profile
+2. **Buddies page** layout:
+   - Top section: "Your travel buddies" — horizontally scrolling avatar cards with names
+   - Each buddy → click → buddy detail page with:
      - "You've been on 3 trips together" stat
      - List of shared trips (chronological)
      - "Plan a new trip with [Name]" button
      - "Settlement: ₹0 / they owe you ₹450"
 3. **Suggestions section:** "You might want to add as buddies" — shows people you've shared 2+ trips with but aren't buddies yet
-4. **Pending requests** badge on tab icon
+4. **Pending requests** badge on the nav item
 5. **In Create Trip flow:** invite buddies with checkboxes (no email typing) → still creates `TripInvitation` but pre-fills email
 
 ## Tasks Breakdown
 
-1. Backend: Buddy model + migration
+1. Backend: Buddy model + Prisma client update
 2. Backend: buddy suggestion algorithm (count shared trips)
-3. Backend: all buddy endpoints
+3. Backend: all buddy endpoints (route handlers + server actions)
 4. Backend: stats aggregation queries
-5. Backend: notification triggers when someone sends/accepts request
-6. Mobile: Buddies tab + main list view
-7. Mobile: Buddy detail screen with shared trips + stats
-8. Mobile: Suggestions section + accept/decline flow
-9. Mobile: Quick-invite buddies flow in Create Trip
-10. Mobile: Buddy avatars throughout the app (member chips, splits, etc.)
-11. Mobile: Settings — block/remove buddy
+5. Backend: notification triggers (web push + Resend email) when someone sends/accepts request
+6. Frontend: Buddies page + main list view
+7. Frontend: Buddy detail page with shared trips + stats
+8. Frontend: Suggestions section + accept/decline flow
+9. Frontend: Quick-invite buddies flow in Create Trip
+10. Frontend: Buddy avatars throughout the app (member chips, splits, etc.)
+11. Frontend: Settings — block/remove buddy
 
 ## Open Questions
 
@@ -535,27 +535,27 @@ model RoleChangeAudit {
 
 1. **Members section** of trip:
    - Each member shows role badge (👑 Owner / ⭐ Admin / 👤 Member / 👁 Viewer)
-   - Tap member → action sheet (only if you have permission): Change Role / Remove
+   - Click member → menu (only if you have permission): Change Role / Remove
 2. **Invitation flow** (extends V1):
    - Email input + role selector (default: Member)
    - Helper text below each role explaining what it can do
 3. **Role-restricted actions** show subtle disabled state with tooltip: "Only admins can do this"
-4. **Audit log** screen accessible from trip settings (owners + admins): timeline of role changes
-5. **Transfer ownership** flow: in trip settings, big warning, requires confirmation
+4. **Audit log** page accessible from trip settings (owners + admins): timeline of role changes
+5. **Transfer ownership** flow: in trip settings, big warning modal, requires confirmation
 
 ## Tasks Breakdown
 
 1. Backend: install + configure Better Auth admin/RBAC plugin
-2. Backend: permission middleware factory
+2. Backend: permission middleware factory (composable wrapper for server actions and route handlers)
 3. Backend: apply middleware to all trip-scoped endpoints
 4. Backend: role-change endpoints + audit logging
 5. Backend: ownership transfer flow
-6. Mobile: role badges on member chips throughout app
-7. Mobile: extended invitation flow with role selector + helper text
-8. Mobile: role change action sheet
-9. Mobile: disabled states with tooltips for restricted actions
-10. Mobile: audit log screen
-11. Mobile: ownership transfer screen
+6. Frontend: role badges on member chips throughout app
+7. Frontend: extended invitation flow with role selector + helper text
+8. Frontend: role change menu / dialog
+9. Frontend: disabled states with tooltips for restricted actions
+10. Frontend: audit log page
+11. Frontend: ownership transfer page
 12. Migration: backfill `role = "owner"` for trip creators in existing data
 
 ## Open Questions
@@ -573,10 +573,10 @@ When V1 ships, these things are already in place that make V2 features faster:
 
 ✅ **Email invitations** — extending to role selection is trivial
 ✅ **TripMember.role field** — exists from Day 1
-✅ **TanStack Query offline persistence** — extending to documents/buddies is plug-and-play
-✅ **Cloudinary integration** — extending to PDFs needs minor config
+✅ **PWA service-worker cache** — extending to documents/buddies pages is plug-and-play
+✅ **Cloudinary integration** — extending to PDFs needs minor config (allowed formats in the upload preset)
 ✅ **Better Auth schema** — admin/RBAC plugin is one config change away
-✅ **Feature flags scaffolding** — every V2 feature can be enabled per user/cohort
+✅ **Feature flags scaffolding** (`lib/featureFlags.ts`) — every V2 feature can be enabled per user/cohort
 
 ---
 
