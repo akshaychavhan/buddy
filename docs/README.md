@@ -24,6 +24,7 @@ For the commit + plan-file convention, see [`./COMMIT_CONVENTION.md`](./COMMIT_C
 **Day 1 — Setup & Mental Model Shift**
 - [Day 1 — Project Setup: Why Next.js (App Router)](./learning/day1_setup.md)
 - [Day 1 — Installation: Tooling Checklist](./learning/day1_installation.md)
+- [Day 1 — First Page Walkthrough: `app/page.tsx` + `app/api/health/route.ts`](./learning/day1_first_page.md)
 
 ### Phase 2 — Core App Plumbing
 
@@ -51,7 +52,7 @@ _(empty)_
 
 > Every bug encountered along the way. Format: What happened / Steps to reproduce / Root cause / Solution / How to avoid.
 
-_(empty — bugs will be logged as they occur)_
+- [Bug 01 — `pnpm dev` fails: requires Node 18.12+, system Node is 16.20](./bug/01_pnpm_node_version_mismatch.md) — 🔴 Critical, ✅ Resolved. Root cause: `$PATH` ordering put system Node 16 ahead of nvm's Node 20. Fix: `nvm use` in the repo root.
 
 ---
 
@@ -59,7 +60,8 @@ _(empty — bugs will be logged as they occur)_
 
 > Every feature/task built. Format: Goal / User story / Acceptance criteria / Tech decisions / Implementation plan / Files changed.
 
-_(empty — tasks will be logged as they begin)_
+### Phase 1 — Foundations
+- [Task 01 — Project Scaffolding](./task/01_project_scaffolding.md) — guided tour of the Next.js + Tailwind + Prisma scaffold built in `Infra_02`; verifies `pnpm dev` runs locally
 
 ---
 
@@ -78,7 +80,7 @@ For V2 features and beyond, see [`FUTURE_SCOPE.md`](../FUTURE_SCOPE.md):
 
 | Phase | Day                                          | Status         | Notes                                            |
 | ----- | -------------------------------------------- | -------------- | ------------------------------------------------ |
-| 1     | Day 1 — Setup & Mental Model Shift           | 🔄 In progress | Repo scaffold + learning docs done; task next   |
+| 1     | Day 1 — Setup & Mental Model Shift           | ✅ Completed   | 3 learning docs + Task 01 + Bug 01 resolved; `pnpm dev` verified on local |
 | 1     | Day 2 — App Router & RSC Mental Model        | ⏸️ Not started |                                                  |
 | 1     | Day 3 — Tailwind, Tokens, Theme System       | ⏸️ Not started |                                                  |
 | 2     | Day 4 — Forms, Server Actions, Trip Categorization | ⏸️ Not started |                                          |
