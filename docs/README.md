@@ -62,6 +62,7 @@ _(empty)_
 
 ### Phase 1 — Foundations
 - [Task 01 — Project Scaffolding](./task/01_project_scaffolding.md) — guided tour of the Next.js + Tailwind + Prisma scaffold built in `Infra_02`; verifies `pnpm dev` runs locally
+- [Task 02 — App Shell](./task/02_app_shell.md) — 📝 Planning. Route groups `(app)`/`(auth)`, nested layouts, `loading.tsx`, `error.tsx`, first Client Component island. Day 2 scope.
 
 ---
 
