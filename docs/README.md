@@ -51,7 +51,7 @@ _(empty)_
 
 > Every bug encountered along the way. Format: What happened / Steps to reproduce / Root cause / Solution / How to avoid.
 
-_(empty — bugs will be logged as they occur)_
+- [Bug 01 — `pnpm dev` fails: requires Node 18.12+, system Node is 16.20](./bug/01_pnpm_node_version_mismatch.md) — 🔴 Critical, ✅ Resolved. Root cause: `$PATH` ordering put system Node 16 ahead of nvm's Node 20. Fix: `nvm use` in the repo root.
 
 ---
 
@@ -59,7 +59,8 @@ _(empty — bugs will be logged as they occur)_
 
 > Every feature/task built. Format: Goal / User story / Acceptance criteria / Tech decisions / Implementation plan / Files changed.
 
-_(empty — tasks will be logged as they begin)_
+### Phase 1 — Foundations
+- [Task 01 — Project Scaffolding](./task/01_project_scaffolding.md) — guided tour of the Next.js + Tailwind + Prisma scaffold built in `Infra_02`; verifies `pnpm dev` runs locally
 
 ---
 
@@ -78,7 +79,7 @@ For V2 features and beyond, see [`FUTURE_SCOPE.md`](../FUTURE_SCOPE.md):
 
 | Phase | Day                                          | Status         | Notes                                            |
 | ----- | -------------------------------------------- | -------------- | ------------------------------------------------ |
-| 1     | Day 1 — Setup & Mental Model Shift           | 🔄 In progress | Repo scaffold + learning docs done; task next   |
+| 1     | Day 1 — Setup & Mental Model Shift           | 🔄 In progress | Task doc + Bug 01 closed; awaiting `day1_first_page.md` summary |
 | 1     | Day 2 — App Router & RSC Mental Model        | ⏸️ Not started |                                                  |
 | 1     | Day 3 — Tailwind, Tokens, Theme System       | ⏸️ Not started |                                                  |
 | 2     | Day 4 — Forms, Server Actions, Trip Categorization | ⏸️ Not started |                                          |
