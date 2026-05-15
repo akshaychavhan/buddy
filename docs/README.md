@@ -15,6 +15,46 @@ For the commit + plan-file convention, see [`./COMMIT_CONVENTION.md`](./COMMIT_C
 
 ---
 
+## 📊 Day 2 — Live Coverage Checklist
+
+> Concepts covered vs pending. Updated as each commit lands. Reading this is the shortest way to know "what does my brain hold now?" without scanning git log. Each row is tagged with the commit number that covers it — `git checkout Day_NN` to revisit.
+
+### Concepts covered ✅
+
+- [x] **Server vs Client Components** — `"use client"` opts a file (and everything it imports) into the client bundle. Server is the default. — `Day_04`
+- [x] **The boundary is the file**, not the component — `Day_04`
+- [x] **What can cross the server→client boundary** — serializable props yes; functions no — `Day_04`
+- [x] **Folder = URL segment**; `page.tsx` makes it real — `Day_05`
+- [x] **`layout.tsx` wraps everything below it** and persists across navigation — `Day_05`
+- [x] **Route groups `(name)`** organize layouts without adding a URL segment — `Day_05`
+- [x] **`layout.tsx` vs `template.tsx`** — persistent vs re-mounting — `Day_05`
+- [x] **`(app)` route group exists**, home page moved into it — `Day_06`
+- [x] **`git mv` for atomic page rename** — preserves file history — `Day_06`
+- [x] **`(auth)` route group exists** with a *different* shell — `Day_07`
+- [x] **Two visibly different layouts from one URL tree** (`/` and `/sign-in`) — `Day_07`
+- [x] **`<Link>` for client-side navigation** — typed routes, no full reload — `Day_08`
+- [x] **Nested page has a real `<Link>` destination** (`/trips`) — `Day_08`
+
+### Concepts pending ⏳
+
+- [ ] **`loading.tsx` as an automatic Suspense boundary** + streaming — `Day_09` (doc) + `Day_10` (code)
+- [ ] **`error.tsx` is a Client Component** (required by Next.js) — `Day_09` (doc) + `Day_11` (code)
+- [ ] **`reset()` on error boundaries** — `Day_11`
+- [ ] **`searchParams` as page-level input** (used for `?boom=1` trigger) — `Day_11`
+- [ ] **First Client Component island** inside a Server Component layout — `Day_12`
+- [ ] **`pnpm build` bundle inspection** — Client Components in their own chunk — `Day_12`
+- [ ] **Metadata API**: static `export const metadata` vs dynamic `generateMetadata` — `Day_13` (doc) + `Day_14` (code)
+- [ ] **`title.template`** for composed page titles like "Trips · Buddies" — `Day_14`
+- [ ] **OpenGraph metadata** per page — `Day_14`
+
+### Deferred to later days
+
+- [ ] Real header styling with design tokens — Day 3
+- [ ] Localized strings — Day 5
+- [ ] Real sign-in form with Better Auth — Day 7
+
+---
+
 ## 📘 Learning Journal
 
 > Concept lessons documented as I learn each topic. Format: WHAT / WHY / HOW + tiny example + gotchas + mini-quiz.
@@ -86,7 +126,7 @@ For V2 features and beyond, see [`FUTURE_SCOPE.md`](../FUTURE_SCOPE.md):
 | Phase | Day                                          | Status         | Notes                                            |
 | ----- | -------------------------------------------- | -------------- | ------------------------------------------------ |
 | 1     | Day 1 — Setup & Mental Model Shift           | ✅ Completed   | 3 learning docs + Task 01 + Bug 01 resolved; `pnpm dev` verified on local |
-| 1     | Day 2 — App Router & RSC Mental Model        | 🔄 In progress | Doc 1 of 4: RSC vs Client Component boundary    |
+| 1     | Day 2 — App Router & RSC Mental Model        | 🔄 In progress | 5 of 12 commits: route groups + `<Link>` nav done; loading/error/island/metadata pending |
 | 1     | Day 3 — Tailwind, Tokens, Theme System       | ⏸️ Not started |                                                  |
 | 2     | Day 4 — Forms, Server Actions, Trip Categorization | ⏸️ Not started |                                          |
 | 2     | Day 5 — i18n, Empty States, UX Polish        | ⏸️ Not started |                                                  |
