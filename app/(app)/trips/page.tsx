@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Trips",
+  description: "Your saved trips, ready to plan.",
+  openGraph: {
+    title: "Trips · Buddies",
+    description: "Your saved trips, ready to plan.",
+  },
+};
+
 export default function TripsPage({
   searchParams,
 }: Readonly<{
