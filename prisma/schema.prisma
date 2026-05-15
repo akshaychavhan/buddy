@@ -13,3 +13,10 @@ datasource db {
 
 // TODO: Better Auth tables (User, Session, Account, Verification) — added on the auth day.
 // TODO: Trip, Membership, Place, Expense, Activity — added as features land.
+
+// Placeholder so `prisma generate` produces a PrismaClient export.
+// Removed in Day_22 when Better Auth's CLI writes the real User/Session/Account/Verification models.
+model Healthcheck {
+  id String  @id @default(auto()) @map("_id") @db.ObjectId
+  ok Boolean @default(true)
+}
