@@ -1,4 +1,12 @@
-export default function TripsPage() {
+export default function TripsPage({
+  searchParams,
+}: Readonly<{
+  searchParams: { boom?: string };
+}>) {
+  if (searchParams.boom === "1") {
+    throw new Error("Boom — error boundary demo");
+  }
+
   const trips = [
     { name: "Goa long weekend", when: "this October" },
     { name: "Spiti road trip", when: "next summer" },
