@@ -63,10 +63,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 ### Concepts covered ✅
 
 - [x] **`PrismaClient` global-singleton pattern** — Fast Refresh leaks connections without it; one instance per process — `Day_15`
+- [x] **MongoDB-with-Prisma quirks** — `ObjectId`, `@map("_id")`, no migrations — `Day_16`
 
 ### Concepts pending ⏳
 
-- [ ] **MongoDB-with-Prisma quirks** — `ObjectId`, `@map("_id")`, no migrations — `Day_16`
 - [ ] **MongoDB Atlas provisioning** — manual cluster setup + `DATABASE_URL` in `.env.local` — `Day_17`
 - [ ] **`lib/prisma.ts` singleton file** ships + `"db:push"` script — `Day_18`
 - [ ] **Better Auth overview** — what it is, why over Clerk/NextAuth — `Day_19`
@@ -117,6 +117,7 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 
 **Day 6 — Prisma + MongoDB** _(pulled forward by Auth Detour)_
 - [Day 6 — Prisma in Next.js: The Global-Singleton Pattern](./learning/day6_prisma_in_nextjs.md)
+- [Day 6 — MongoDB with Prisma: ObjectIds, `@map("_id")`, and No Migrations](./learning/day6_mongodb_with_prisma.md)
 
 ### Phase 3 — Auth & Backend Wiring
 
