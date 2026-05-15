@@ -67,10 +67,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **MongoDB Atlas provisioning** — manual cluster setup + `DATABASE_URL` in `.env.local` — `Day_17`
 - [x] **`lib/prisma.ts` singleton file** ships + `"db:push"` script — `Day_18`
 - [x] **Better Auth overview** — what it is, why over Clerk/NextAuth — `Day_19`
+- [x] **Better Auth install + adapter** — Prisma adapter, schema-generation flow — `Day_20`
 
 ### Concepts pending ⏳
 
-- [ ] **Better Auth install + adapter** — Prisma adapter, schema-generation flow — `Day_20`
 - [ ] **`better-auth` package installed**, `BETTER_AUTH_SECRET` generated, OAuth env vars scaffolded — `Day_21`
 - [ ] **`lib/auth.ts` Better Auth server config** + User/Session/Account/Verification models in schema — `Day_22`
 - [ ] **`app/api/auth/[...all]/route.ts`** catch-all route handler — `Day_23`
@@ -123,6 +123,7 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 
 **Day 7 — Better Auth** _(pulled forward by Auth Detour)_
 - [Day 7 — Better Auth Overview: What It Is and Why We Picked It](./learning/day7_better_auth_overview.md)
+- [Day 7 — Better Auth Install: Package, Adapter, Schema-Generation Flow](./learning/day7_better_auth_install.md)
 
 ### Phase 4 — Web-Native Features
 
