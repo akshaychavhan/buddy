@@ -69,6 +69,7 @@ For the commit + plan-file convention, see [`./COMMIT_CONVENTION.md`](./COMMIT_C
 **Day 2 — App Router & RSC Mental Model**
 - [Day 2 — Server Components vs Client Components: The Boundary Rule](./learning/day2_rsc_vs_client_components.md)
 - [Day 2 — Layouts, Templates, and Route Groups](./learning/day2_layouts_and_templates.md)
+- [Day 2 — `loading.tsx` and `error.tsx`: Free Boundaries Per Segment](./learning/day2_loading_and_error_files.md)
 
 ### Phase 2 — Core App Plumbing
 
@@ -126,7 +127,7 @@ For V2 features and beyond, see [`FUTURE_SCOPE.md`](../FUTURE_SCOPE.md):
 | Phase | Day                                          | Status         | Notes                                            |
 | ----- | -------------------------------------------- | -------------- | ------------------------------------------------ |
 | 1     | Day 1 — Setup & Mental Model Shift           | ✅ Completed   | 3 learning docs + Task 01 + Bug 01 resolved; `pnpm dev` verified on local |
-| 1     | Day 2 — App Router & RSC Mental Model        | 🔄 In progress | 5 of 12 commits: route groups + `<Link>` nav done; loading/error/island/metadata pending |
+| 1     | Day 2 — App Router & RSC Mental Model        | 🔄 In progress | 6 of 12 commits: route groups + `<Link>` nav + loading/error doc done; loading/error code + island + metadata pending |
 | 1     | Day 3 — Tailwind, Tokens, Theme System       | ⏸️ Not started |                                                  |
 | 2     | Day 4 — Forms, Server Actions, Trip Categorization | ⏸️ Not started |                                          |
 | 2     | Day 5 — i18n, Empty States, UX Polish        | ⏸️ Not started |                                                  |
