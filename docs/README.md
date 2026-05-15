@@ -34,10 +34,10 @@ For the commit + plan-file convention, see [`./COMMIT_CONVENTION.md`](./COMMIT_C
 - [x] **Two visibly different layouts from one URL tree** (`/` and `/sign-in`) — `Day_07`
 - [x] **`<Link>` for client-side navigation** — typed routes, no full reload — `Day_08`
 - [x] **Nested page has a real `<Link>` destination** (`/trips`) — `Day_08`
+- [x] **`loading.tsx` as an automatic Suspense boundary** + streaming — `Day_09` (doc) + `Day_10` (code)
 
 ### Concepts pending ⏳
 
-- [ ] **`loading.tsx` as an automatic Suspense boundary** + streaming — `Day_09` (doc) + `Day_10` (code)
 - [ ] **`error.tsx` is a Client Component** (required by Next.js) — `Day_09` (doc) + `Day_11` (code)
 - [ ] **`reset()` on error boundaries** — `Day_11`
 - [ ] **`searchParams` as page-level input** (used for `?boom=1` trigger) — `Day_11`
@@ -127,7 +127,7 @@ For V2 features and beyond, see [`FUTURE_SCOPE.md`](../FUTURE_SCOPE.md):
 | Phase | Day                                          | Status         | Notes                                            |
 | ----- | -------------------------------------------- | -------------- | ------------------------------------------------ |
 | 1     | Day 1 — Setup & Mental Model Shift           | ✅ Completed   | 3 learning docs + Task 01 + Bug 01 resolved; `pnpm dev` verified on local |
-| 1     | Day 2 — App Router & RSC Mental Model        | 🔄 In progress | 6 of 12 commits: route groups + `<Link>` nav + loading/error doc done; loading/error code + island + metadata pending |
+| 1     | Day 2 — App Router & RSC Mental Model        | 🔄 In progress | 7 of 12 commits: route groups + nav + loading skeleton done; error boundary + island + metadata pending |
 | 1     | Day 3 — Tailwind, Tokens, Theme System       | ⏸️ Not started |                                                  |
 | 2     | Day 4 — Forms, Server Actions, Trip Categorization | ⏸️ Not started |                                          |
 | 2     | Day 5 — i18n, Empty States, UX Polish        | ⏸️ Not started |                                                  |
