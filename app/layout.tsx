@@ -2,16 +2,23 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Buddies — Plan trips together",
+  title: {
+    template: "%s · Buddies",
+    default: "Buddies — Plan trips together",
+  },
   description:
     "A web-first trip planner built around the idea that the best trips happen with friends.",
+  openGraph: {
+    siteName: "Buddies",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en">
       <body className="min-h-screen bg-white text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100">

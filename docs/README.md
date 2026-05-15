@@ -34,18 +34,19 @@ For the commit + plan-file convention, see [`./COMMIT_CONVENTION.md`](./COMMIT_C
 - [x] **Two visibly different layouts from one URL tree** (`/` and `/sign-in`) — `Day_07`
 - [x] **`<Link>` for client-side navigation** — typed routes, no full reload — `Day_08`
 - [x] **Nested page has a real `<Link>` destination** (`/trips`) — `Day_08`
+- [x] **`loading.tsx` as an automatic Suspense boundary** + streaming — `Day_09` (doc) + `Day_10` (code)
+- [x] **`error.tsx` is a Client Component** (required by Next.js) — `Day_09` (doc) + `Day_11` (code)
+- [x] **`reset()` on error boundaries** — `Day_11`
+- [x] **`searchParams` as page-level input** (used for `?boom=1` trigger) — `Day_11`
+- [x] **First Client Component island** inside a Server Component layout — `Day_12`
+- [x] **`pnpm build` bundle inspection** — Client Components in their own chunk — `Day_12`
+- [x] **Metadata API**: static `export const metadata` vs dynamic `generateMetadata` — `Day_13` (doc) + `Day_14` (code)
+- [x] **`title.template`** for composed page titles like "Trips · Buddies" — `Day_14`
+- [x] **OpenGraph metadata** per page — `Day_14`
 
 ### Concepts pending ⏳
 
-- [ ] **`loading.tsx` as an automatic Suspense boundary** + streaming — `Day_09` (doc) + `Day_10` (code)
-- [ ] **`error.tsx` is a Client Component** (required by Next.js) — `Day_09` (doc) + `Day_11` (code)
-- [ ] **`reset()` on error boundaries** — `Day_11`
-- [ ] **`searchParams` as page-level input** (used for `?boom=1` trigger) — `Day_11`
-- [ ] **First Client Component island** inside a Server Component layout — `Day_12`
-- [ ] **`pnpm build` bundle inspection** — Client Components in their own chunk — `Day_12`
-- [ ] **Metadata API**: static `export const metadata` vs dynamic `generateMetadata` — `Day_13` (doc) + `Day_14` (code)
-- [ ] **`title.template`** for composed page titles like "Trips · Buddies" — `Day_14`
-- [ ] **OpenGraph metadata** per page — `Day_14`
+_(none — all 22 Day 2 concepts covered. Close-out commit Day_15 next.)_
 
 ### Deferred to later days
 
@@ -69,6 +70,8 @@ For the commit + plan-file convention, see [`./COMMIT_CONVENTION.md`](./COMMIT_C
 **Day 2 — App Router & RSC Mental Model**
 - [Day 2 — Server Components vs Client Components: The Boundary Rule](./learning/day2_rsc_vs_client_components.md)
 - [Day 2 — Layouts, Templates, and Route Groups](./learning/day2_layouts_and_templates.md)
+- [Day 2 — `loading.tsx` and `error.tsx`: Free Boundaries Per Segment](./learning/day2_loading_and_error_files.md)
+- [Day 2 — The Metadata API: Per-Page Titles, OpenGraph, and Friends](./learning/day2_metadata_api.md)
 
 ### Phase 2 — Core App Plumbing
 
@@ -126,7 +129,7 @@ For V2 features and beyond, see [`FUTURE_SCOPE.md`](../FUTURE_SCOPE.md):
 | Phase | Day                                          | Status         | Notes                                            |
 | ----- | -------------------------------------------- | -------------- | ------------------------------------------------ |
 | 1     | Day 1 — Setup & Mental Model Shift           | ✅ Completed   | 3 learning docs + Task 01 + Bug 01 resolved; `pnpm dev` verified on local |
-| 1     | Day 2 — App Router & RSC Mental Model        | 🔄 In progress | 5 of 12 commits: route groups + `<Link>` nav done; loading/error/island/metadata pending |
+| 1     | Day 2 — App Router & RSC Mental Model        | 🔄 In progress | 11 of 12 commits: all concepts shipped + verified; close-out commit Day_15 next |
 | 1     | Day 3 — Tailwind, Tokens, Theme System       | ⏸️ Not started |                                                  |
 | 2     | Day 4 — Forms, Server Actions, Trip Categorization | ⏸️ Not started |                                          |
 | 2     | Day 5 — i18n, Empty States, UX Polish        | ⏸️ Not started |                                                  |

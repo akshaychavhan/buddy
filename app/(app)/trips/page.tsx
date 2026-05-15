@@ -1,4 +1,23 @@
-export default function TripsPage() {
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Trips",
+  description: "Your saved trips, ready to plan.",
+  openGraph: {
+    title: "Trips · Buddies",
+    description: "Your saved trips, ready to plan.",
+  },
+};
+
+export default function TripsPage({
+  searchParams,
+}: Readonly<{
+  searchParams: { boom?: string };
+}>) {
+  if (searchParams.boom === "1") {
+    throw new Error("Boom — error boundary demo");
+  }
+
   const trips = [
     { name: "Goa long weekend", when: "this October" },
     { name: "Spiti road trip", when: "next summer" },

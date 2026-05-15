@@ -1,3 +1,14 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign in",
+  description: "Sign in to plan trips with friends.",
+  openGraph: {
+    title: "Sign in · Buddies",
+    description: "Sign in to plan trips with friends.",
+  },
+};
+
 export default function SignInPage() {
   return (
     <div className="flex flex-col gap-4 text-center">
