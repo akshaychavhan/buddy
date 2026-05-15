@@ -28,6 +28,7 @@ For the commit + plan-file convention, see [`./COMMIT_CONVENTION.md`](./COMMIT_C
 
 **Day 2 — App Router & RSC Mental Model**
 - [Day 2 — Server Components vs Client Components: The Boundary Rule](./learning/day2_rsc_vs_client_components.md)
+- [Day 2 — Layouts, Templates, and Route Groups](./learning/day2_layouts_and_templates.md)
 
 ### Phase 2 — Core App Plumbing
 
