@@ -1,10 +1,11 @@
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function AppLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="flex items-center justify-between border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
@@ -24,6 +25,7 @@ export default function AppLayout({
           >
             Sign in
           </Link>
+          <ThemeToggle />
         </nav>
       </header>
       <main className="flex-1">{children}</main>
