@@ -64,10 +64,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 
 - [x] **`PrismaClient` global-singleton pattern** — Fast Refresh leaks connections without it; one instance per process — `Day_15`
 - [x] **MongoDB-with-Prisma quirks** — `ObjectId`, `@map("_id")`, no migrations — `Day_16`
+- [x] **MongoDB Atlas provisioning** — manual cluster setup + `DATABASE_URL` in `.env.local` — `Day_17`
 
 ### Concepts pending ⏳
 
-- [ ] **MongoDB Atlas provisioning** — manual cluster setup + `DATABASE_URL` in `.env.local` — `Day_17`
 - [ ] **`lib/prisma.ts` singleton file** ships + `"db:push"` script — `Day_18`
 - [ ] **Better Auth overview** — what it is, why over Clerk/NextAuth — `Day_19`
 - [ ] **Better Auth install + adapter** — Prisma adapter, schema-generation flow — `Day_20`
