@@ -2,7 +2,7 @@
 
 > **Started:** 2026-05-11
 > **Completed:** _TBD_
-> **Status:** 📝 Planning
+> **Status:** 🔄 In Progress
 > **Phase:** 1 — Foundations
 
 ---
@@ -76,34 +76,36 @@ By the end of Day 2 we should be able to navigate `/` → `/sign-in` → `/trips
 
 ## 📋 Implementation Plan
 
-Split into 3–4 commits (`Day_03`, `Day_04`, …), each with its own plan file. Order:
+**Revised 2026-05-14 (during `Day_04`).** The original plan had 4 coarse commits; this expanded plan ships **12 fine commits** so each one teaches exactly one App Router concept. Pattern: **doc-first** (the learning doc for a concept lands as its own commit *before* the code commit that applies it). Lets the reader walk `git log` step-by-step as a Day 2 tutorial.
 
-### Commit A — `Day_03_Add_route_groups_and_layouts`
-1. Create `app/(app)/layout.tsx` with a Server Component header (brand + nav `<Link>`s for `/`, `/trips`, `/sign-in`).
-2. Create `app/(auth)/layout.tsx` with a centered shell, no header.
-3. Create `app/(app)/trips/page.tsx` — placeholder, Server Component, lists 3 hardcoded trip names.
-4. Create `app/(auth)/sign-in/page.tsx` — placeholder, Server Component.
-5. **Move** the current `app/page.tsx` into the `(app)` group? — *Open question, see Gotchas.*
-6. Verify `pnpm dev` → click through `/` → `/trips` → `/sign-in`, observe shell differences.
+| # | Commit | Type | Teaches |
+|---|---|---|---|
+| 1 | `Day_04_Add_rsc_vs_client_components_learning_doc` | docs | The Server/Client boundary rule |
+| 2 | `Day_05_Add_layouts_and_templates_learning_doc` | docs | Nested layouts + route groups syntax |
+| 3 | `Day_06_Add_app_route_group_and_move_home_page` | code | Route groups don't add URL segments |
+| 4 | `Day_07_Add_auth_route_group_and_sign_in_stub` | code | A *second* shell via a second group |
+| 5 | `Day_08_Add_header_with_link_navigation_in_app_layout` | code | `<Link>` typed routes + client-side nav |
+| 6 | `Day_09_Add_loading_and_error_files_learning_doc` | docs | `loading.tsx` / `error.tsx` / streaming |
+| 7 | `Day_10_Add_root_loading_skeleton` | code | `loading.tsx` as auto-Suspense boundary |
+| 8 | `Day_11_Add_root_error_boundary_and_boom_trigger` | code | `error.tsx` must be Client; `reset()` |
+| 9 | `Day_12_Add_theme_toggle_client_component_island` | code | Client Component inside Server layout |
+| 10 | `Day_13_Add_metadata_api_learning_doc` | docs | `metadata` + `generateMetadata` |
+| 11 | `Day_14_Add_per_page_metadata_exports` | code | Apply metadata API across all pages |
+| 12 | `Day_15_Close_day_2_and_flip_progress_tracker` | docs | Day 2 retro + tracker flip to ✅ |
 
-### Commit B — `Day_04_Add_loading_and_error_boundaries`
-1. Create `app/loading.tsx` — Server Component, generic skeleton (animated div).
-2. Create `app/error.tsx` — Client Component (`"use client"`), shows error message + "Try again" button calling `reset()`.
-3. Add a **deliberate** `?boom=1` query handler on `/trips` that throws, to prove the boundary catches it.
-4. Verify in browser: trigger error → see error UI → click "Try again" → page recovers.
+**Ordering rationale:** the single hard constraint is that `app/page.tsx` and `app/(app)/page.tsx` cannot coexist (both resolve to `/` → build error). The move happens atomically inside `Day_06`. `error.tsx` requires `"use client"` — that's why the boundary-rule doc (`Day_04`) precedes any code. `<Link href="/trips">` requires the trips page to exist — both land in the same commit (`Day_08`). No middle commit leaves the repo broken.
 
-### Commit C — `Day_05_Add_first_client_component`
-1. Create `components/theme-toggle.tsx` — Client Component, button with stub `onClick`.
-2. Import it into `app/(app)/layout.tsx` header.
-3. Verify: page still renders, button click fires (alert), no hydration warnings in console.
-4. Inspect bundle output (`pnpm build`) — confirm theme-toggle ships JS to the browser, layout does not.
+**Build-error trap matrix** — what would break if commits land out of order:
 
-### Commit D — `Day_06_Add_day2_learning_docs_and_close_day_2`
-1. Write `docs/learning/day2_rsc_vs_client_components.md`.
-2. Write `docs/learning/day2_layouts_and_templates.md`.
-3. Write `docs/learning/day2_loading_and_error_files.md`.
-4. Flip Day 2 row in `docs/README.md` progress tracker to ✅ Completed.
-5. Update [docs/README.md](../README.md) Task Journal with Task 02.
+| Wrong order | Symptom |
+|---|---|
+| Create `app/(app)/page.tsx` without moving `app/page.tsx` in the same commit | `Error: You cannot have two parallel pages that resolve to the same path` |
+| `error.tsx` without `"use client"` | Next dev overlay: "error.tsx must be a Client Component" |
+| Theme-toggle without `"use client"` | Hydration mismatch / `onClick is not a function` at SSR |
+| `<Link href="/trips">` before `app/(app)/trips/page.tsx` exists | TS error from `experimental.typedRoutes` + 404 at runtime |
+| Per-page `metadata` before reader sees the doc | Code works, learning gap |
+
+The 12-commit ordering above prevents all five.
 
 ---
 
