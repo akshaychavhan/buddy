@@ -46,13 +46,53 @@ For the commit + plan-file convention, see [`./COMMIT_CONVENTION.md`](./COMMIT_C
 
 ### Concepts pending ⏳
 
-_(none — all 22 Day 2 concepts covered. Close-out commit Day_15 next.)_
+_(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after the Auth Detour finishes.)_
 
 ### Deferred to later days
 
 - [ ] Real header styling with design tokens — Day 3
 - [ ] Localized strings — Day 5
-- [ ] Real sign-in form with Better Auth — Day 7
+- [ ] Real sign-in form with Better Auth — Day 7 (in progress via Auth Detour, see below)
+
+---
+
+## 📊 Auth Detour — Live Coverage Checklist
+
+> Mid-Day-2 detour: building **full production auth** (Better Auth + Prisma + MongoDB Atlas + email/password + magic-link via Resend + Google OAuth) before closing Day 2. Pulls forward parts of Day 6 (Prisma), all of Day 7 (Better Auth), and a slice of Day 11 (Resend, just the magic-link wrapper). Runs `Day_15` → `Day_36`. Each row tagged with the commit number that covers it.
+
+### Concepts covered ✅
+
+- [x] **`PrismaClient` global-singleton pattern** — Fast Refresh leaks connections without it; one instance per process — `Day_15`
+
+### Concepts pending ⏳
+
+- [ ] **MongoDB-with-Prisma quirks** — `ObjectId`, `@map("_id")`, no migrations — `Day_16`
+- [ ] **MongoDB Atlas provisioning** — manual cluster setup + `DATABASE_URL` in `.env.local` — `Day_17`
+- [ ] **`lib/prisma.ts` singleton file** ships + `"db:push"` script — `Day_18`
+- [ ] **Better Auth overview** — what it is, why over Clerk/NextAuth — `Day_19`
+- [ ] **Better Auth install + adapter** — Prisma adapter, schema-generation flow — `Day_20`
+- [ ] **`better-auth` package installed**, `BETTER_AUTH_SECRET` generated, OAuth env vars scaffolded — `Day_21`
+- [ ] **`lib/auth.ts` Better Auth server config** + User/Session/Account/Verification models in schema — `Day_22`
+- [ ] **`app/api/auth/[...all]/route.ts`** catch-all route handler — `Day_23`
+- [ ] **Email/password Server Action flow** — form data → Better Auth → cookie → redirect — `Day_24` (doc) + `Day_26` (code)
+- [ ] **Sign-up page + Server Action** — `app/(auth)/sign-up/page.tsx` — `Day_25`
+- [ ] **Real sign-in form** — replaces the Day_07 stub — `Day_26`
+- [ ] **Session reads in Server Actions / Server Components** — how `auth.api.getSession(...)` works — `Day_27`
+- [ ] **Sign-out action** + header shows session state — `Day_28`
+- [ ] **Protected pages: middleware vs layout guard** — trade-offs — `Day_29` (doc) + `Day_30` (code)
+- [ ] **`(app)` layout reads session, redirects if absent** — `Day_30`
+- [ ] **Magic-link via Resend** — `lib/email.ts` wrapper, Better Auth magic-link plugin — `Day_31` (doc) + `Day_32` (code)
+- [ ] **OAuth callback URLs** — why `BETTER_AUTH_URL` must match Google Console — `Day_33`
+- [ ] **Google Cloud Console OAuth app registered** + env vars set — `Day_34`
+- [ ] **Google provider enabled + "Sign in with Google" button** — three auth methods coexist — `Day_35`
+- [ ] **Auth Detour close-out** — Day 2 → ✅, Day 6 → partial, Day 7 → ✅; checklist frozen — `Day_36`
+
+### Deferred to later days
+
+- [ ] Full Trip CRUD with user-scoping — Day 6 proper / Day 7's `13_trips_crud_user_scoped.md`
+- [ ] Broader Resend usage (trip invitations, reminders) — Day 11
+- [ ] GitHub OAuth + other providers — future extension
+- [ ] Edge-runtime `middleware.ts` for route protection — future revisit (we use layout-guard for now)
 
 ---
 
@@ -75,7 +115,8 @@ _(none — all 22 Day 2 concepts covered. Close-out commit Day_15 next.)_
 
 ### Phase 2 — Core App Plumbing
 
-_(empty)_
+**Day 6 — Prisma + MongoDB** _(pulled forward by Auth Detour)_
+- [Day 6 — Prisma in Next.js: The Global-Singleton Pattern](./learning/day6_prisma_in_nextjs.md)
 
 ### Phase 3 — Auth & Backend Wiring
 
