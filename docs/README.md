@@ -69,11 +69,11 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **Better Auth overview** — what it is, why over Clerk/NextAuth — `Day_19`
 - [x] **Better Auth install + adapter** — Prisma adapter, schema-generation flow — `Day_20`
 - [x] **`better-auth` package installed**, `BETTER_AUTH_SECRET` generated, OAuth env vars scaffolded — `Day_21`
+- [x] **`lib/auth.ts` Better Auth server config** + User/Session/Account/Verification models in schema — `Day_22`
+- [x] **`app/api/auth/[...all]/route.ts`** catch-all route handler — `Day_23`
 
 ### Concepts pending ⏳
 
-- [ ] **`lib/auth.ts` Better Auth server config** + User/Session/Account/Verification models in schema — `Day_22`
-- [ ] **`app/api/auth/[...all]/route.ts`** catch-all route handler — `Day_23`
 - [ ] **Email/password Server Action flow** — form data → Better Auth → cookie → redirect — `Day_24` (doc) + `Day_26` (code)
 - [ ] **Sign-up page + Server Action** — `app/(auth)/sign-up/page.tsx` — `Day_25`
 - [ ] **Real sign-in form** — replaces the Day_07 stub — `Day_26`
