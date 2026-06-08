@@ -75,10 +75,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **Sign-up page + Server Action** — `app/(auth)/sign-up/page.tsx` — `Day_25`
 - [x] **Real sign-in form** — replaces the Day_07 stub — `Day_26`
 - [x] **Session reads in Server Actions / Server Components** — how `auth.api.getSession(...)` works — `Day_27`
+- [x] **Sign-out action** + header shows session state — `Day_28`
 
 ### Concepts pending ⏳
 
-- [ ] **Sign-out action** + header shows session state — `Day_28`
 - [ ] **Protected pages: middleware vs layout guard** — trade-offs — `Day_29` (doc) + `Day_30` (code)
 - [ ] **`(app)` layout reads session, redirects if absent** — `Day_30`
 - [ ] **Magic-link via Resend** — `lib/email.ts` wrapper, Better Auth magic-link plugin — `Day_31` (doc) + `Day_32` (code)
