@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -18,6 +19,10 @@ export default async function AppLayout({
     headers: await headers(),
   });
 
+  if (!session) {
+    redirect("/sign-in");
+  }
+
   return (
     <div className="flex min-h-screen flex-col">
       <header className="flex items-center justify-between border-b border-neutral-200 px-6 py-4 dark:border-neutral-800">
@@ -31,21 +36,10 @@ export default async function AppLayout({
           >
             Trips
           </Link>
-          {session ? (
-            <>
-              <span className="text-neutral-500 dark:text-neutral-400">
-                {session.user.name}
-              </span>
-              <SignOutButton />
-            </>
-          ) : (
-            <Link
-              href="/sign-in"
-              className="text-neutral-700 hover:text-neutral-950 dark:text-neutral-300 dark:hover:text-neutral-50"
-            >
-              Sign in
-            </Link>
-          )}
+          <span className="text-neutral-500 dark:text-neutral-400">
+            {session.user.name}
+          </span>
+          <SignOutButton />
           <ThemeToggle />
         </nav>
       </header>

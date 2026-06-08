@@ -77,10 +77,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **Session reads in Server Actions / Server Components** — how `auth.api.getSession(...)` works — `Day_27`
 - [x] **Sign-out action** + header shows session state — `Day_28`
 - [x] **Protected pages: middleware vs layout guard** — trade-offs — `Day_29` (doc) + `Day_30` (code)
+- [x] **`(app)` layout reads session, redirects if absent** — `Day_30`
 
 ### Concepts pending ⏳
 
-- [ ] **`(app)` layout reads session, redirects if absent** — `Day_30`
 - [ ] **Magic-link via Resend** — `lib/email.ts` wrapper, Better Auth magic-link plugin — `Day_31` (doc) + `Day_32` (code)
 - [ ] **OAuth callback URLs** — why `BETTER_AUTH_URL` must match Google Console — `Day_33`
 - [ ] **Google Cloud Console OAuth app registered** + env vars set — `Day_34`
