@@ -76,10 +76,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **Real sign-in form** — replaces the Day_07 stub — `Day_26`
 - [x] **Session reads in Server Actions / Server Components** — how `auth.api.getSession(...)` works — `Day_27`
 - [x] **Sign-out action** + header shows session state — `Day_28`
+- [x] **Protected pages: middleware vs layout guard** — trade-offs — `Day_29` (doc) + `Day_30` (code)
 
 ### Concepts pending ⏳
 
-- [ ] **Protected pages: middleware vs layout guard** — trade-offs — `Day_29` (doc) + `Day_30` (code)
 - [ ] **`(app)` layout reads session, redirects if absent** — `Day_30`
 - [ ] **Magic-link via Resend** — `lib/email.ts` wrapper, Better Auth magic-link plugin — `Day_31` (doc) + `Day_32` (code)
 - [ ] **OAuth callback URLs** — why `BETTER_AUTH_URL` must match Google Console — `Day_33`
@@ -126,6 +126,7 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [Day 7 — Better Auth Install: Package, Adapter, Schema-Generation Flow](./learning/day7_better_auth_install.md)
 - [Day 7 — Email/Password Sign-Up & Sign-In: The Server Action Flow](./learning/day7_email_password_flow.md)
 - [Day 7 — Reading the Session: `auth.api.getSession` in Server Components and Actions](./learning/day7_session_in_server_actions.md)
+- [Day 7 — Protecting Pages: Middleware vs Layout-Guard](./learning/day7_protecting_pages.md)
 
 ### Phase 4 — Web-Native Features
 
