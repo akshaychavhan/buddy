@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { SignInForm } from "./sign-in-form";
+
 export const metadata: Metadata = {
   title: "Sign in",
   description: "Sign in to plan trips with friends.",
@@ -11,15 +13,17 @@ export const metadata: Metadata = {
 
 export default function SignInPage() {
   return (
-    <div className="flex flex-col gap-4 text-center">
-      <h1 className="text-3xl font-semibold tracking-tight">Sign in</h1>
-      <p className="text-sm text-neutral-600 dark:text-neutral-400">
-        The real sign-in form lands on Day 7 when Better Auth is wired up.
-      </p>
-      <p className="text-xs text-neutral-500">
-        Notice the centered shell — different layout from the rest of the app,
-        same URL tree.
-      </p>
+    <div className="flex flex-col gap-6 text-center">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-3xl font-semibold tracking-tight">
+          Sign in to Buddies
+        </h1>
+        <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          Welcome back. Magic-link and Google sign-in land later in Day 7.
+        </p>
+      </div>
+
+      <SignInForm />
     </div>
   );
 }

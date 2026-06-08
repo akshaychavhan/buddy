@@ -73,10 +73,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **`app/api/auth/[...all]/route.ts`** catch-all route handler — `Day_23`
 - [x] **Email/password Server Action flow** — form data → Better Auth → cookie → redirect — `Day_24` (doc) + `Day_26` (code)
 - [x] **Sign-up page + Server Action** — `app/(auth)/sign-up/page.tsx` — `Day_25`
+- [x] **Real sign-in form** — replaces the Day_07 stub — `Day_26`
 
 ### Concepts pending ⏳
 
-- [ ] **Real sign-in form** — replaces the Day_07 stub — `Day_26`
 - [ ] **Session reads in Server Actions / Server Components** — how `auth.api.getSession(...)` works — `Day_27`
 - [ ] **Sign-out action** + header shows session state — `Day_28`
 - [ ] **Protected pages: middleware vs layout guard** — trade-offs — `Day_29` (doc) + `Day_30` (code)
