@@ -74,10 +74,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **Email/password Server Action flow** — form data → Better Auth → cookie → redirect — `Day_24` (doc) + `Day_26` (code)
 - [x] **Sign-up page + Server Action** — `app/(auth)/sign-up/page.tsx` — `Day_25`
 - [x] **Real sign-in form** — replaces the Day_07 stub — `Day_26`
+- [x] **Session reads in Server Actions / Server Components** — how `auth.api.getSession(...)` works — `Day_27`
 
 ### Concepts pending ⏳
 
-- [ ] **Session reads in Server Actions / Server Components** — how `auth.api.getSession(...)` works — `Day_27`
 - [ ] **Sign-out action** + header shows session state — `Day_28`
 - [ ] **Protected pages: middleware vs layout guard** — trade-offs — `Day_29` (doc) + `Day_30` (code)
 - [ ] **`(app)` layout reads session, redirects if absent** — `Day_30`
@@ -125,6 +125,7 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [Day 7 — Better Auth Overview: What It Is and Why We Picked It](./learning/day7_better_auth_overview.md)
 - [Day 7 — Better Auth Install: Package, Adapter, Schema-Generation Flow](./learning/day7_better_auth_install.md)
 - [Day 7 — Email/Password Sign-Up & Sign-In: The Server Action Flow](./learning/day7_email_password_flow.md)
+- [Day 7 — Reading the Session: `auth.api.getSession` in Server Components and Actions](./learning/day7_session_in_server_actions.md)
 
 ### Phase 4 — Web-Native Features
 
