@@ -78,10 +78,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **Sign-out action** + header shows session state — `Day_28`
 - [x] **Protected pages: middleware vs layout guard** — trade-offs — `Day_29` (doc) + `Day_30` (code)
 - [x] **`(app)` layout reads session, redirects if absent** — `Day_30`
+- [x] **Magic-link via Resend** — `lib/email.ts` wrapper, Better Auth magic-link plugin — `Day_31` (doc) + `Day_32` (code)
 
 ### Concepts pending ⏳
 
-- [ ] **Magic-link via Resend** — `lib/email.ts` wrapper, Better Auth magic-link plugin — `Day_31` (doc) + `Day_32` (code)
 - [ ] **OAuth callback URLs** — why `BETTER_AUTH_URL` must match Google Console — `Day_33`
 - [ ] **Google Cloud Console OAuth app registered** + env vars set — `Day_34`
 - [ ] **Google provider enabled + "Sign in with Google" button** — three auth methods coexist — `Day_35`
@@ -127,6 +127,7 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [Day 7 — Email/Password Sign-Up & Sign-In: The Server Action Flow](./learning/day7_email_password_flow.md)
 - [Day 7 — Reading the Session: `auth.api.getSession` in Server Components and Actions](./learning/day7_session_in_server_actions.md)
 - [Day 7 — Protecting Pages: Middleware vs Layout-Guard](./learning/day7_protecting_pages.md)
+- [Day 7 — Resend for Magic-Link Sign-In](./learning/day7_resend_for_magic_link.md)
 
 ### Phase 4 — Web-Native Features
 
