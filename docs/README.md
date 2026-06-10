@@ -52,7 +52,6 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 
 - [ ] Real header styling with design tokens — Day 3
 - [ ] Localized strings — Day 5
-- [ ] Real sign-in form with Better Auth — Day 7 (in progress via Auth Detour, see below)
 
 ---
 
@@ -82,10 +81,11 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **OAuth callback URLs** — why `BETTER_AUTH_URL` must match Google Console — `Day_33`
 - [x] **Google Cloud Console OAuth app registered** + env vars set — `Day_34`
 - [x] **Google provider enabled + "Sign in with Google" button** — three auth methods coexist — `Day_35`
+- [x] **Auth Detour close-out** — Day 2 → ✅, Day 6 → partial, Day 7 → ✅; checklist frozen — `Day_36`
 
 ### Concepts pending ⏳
 
-- [ ] **Auth Detour close-out** — Day 2 → ✅, Day 6 → partial, Day 7 → ✅; checklist frozen — `Day_36`
+_(none — Auth Detour complete. All 21 concepts covered across 22 commits + 1 fix.)_
 
 ### Deferred to later days
 
@@ -178,12 +178,12 @@ For V2 features and beyond, see [`FUTURE_SCOPE.md`](../FUTURE_SCOPE.md):
 | Phase | Day                                          | Status         | Notes                                            |
 | ----- | -------------------------------------------- | -------------- | ------------------------------------------------ |
 | 1     | Day 1 — Setup & Mental Model Shift           | ✅ Completed   | 3 learning docs + Task 01 + Bug 01 resolved; `pnpm dev` verified on local |
-| 1     | Day 2 — App Router & RSC Mental Model        | 🔄 In progress | 11 of 12 commits: all concepts shipped + verified; close-out commit Day_15 next |
+| 1     | Day 2 — App Router & RSC Mental Model        | ✅ Completed   | 4 learning docs + route groups + nested layouts + loading/error + first Client island + metadata API. Close-out merged into Auth Detour `Day_36`. |
 | 1     | Day 3 — Tailwind, Tokens, Theme System       | ⏸️ Not started |                                                  |
 | 2     | Day 4 — Forms, Server Actions, Trip Categorization | ⏸️ Not started |                                          |
 | 2     | Day 5 — i18n, Empty States, UX Polish        | ⏸️ Not started |                                                  |
-| 2     | Day 6 — Prisma + MongoDB                     | ⏸️ Not started |                                                  |
-| 3     | Day 7 — Better Auth                          | ⏸️ Not started |                                                  |
+| 2     | Day 6 — Prisma + MongoDB                     | 🟡 Partial     | Prisma client + MongoDB Atlas wired in Auth Detour (Day_15–Day_18); 4 auth models in schema (Day_22). Trip CRUD deferred to Day 6 proper. |
+| 3     | Day 7 — Better Auth                          | ✅ Completed   | Email/password + magic-link + Google OAuth via Auth Detour (Day_19–Day_35); 7 learning docs; full sign-up → sign-in → sign-out → protected-route loop works end-to-end. |
 | 4     | Day 8 — Image Uploads with Cloudinary        | ⏸️ Not started |                                                  |
 | 4     | Day 9 — Maps & Wikipedia Place Insights      | ⏸️ Not started |                                                  |
 | 4     | Day 10 — Reminders + Web Push                | ⏸️ Not started |                                                  |
@@ -193,4 +193,4 @@ For V2 features and beyond, see [`FUTURE_SCOPE.md`](../FUTURE_SCOPE.md):
 | 5     | Day 14 — PWA + Offline-Friendly Reads        | ⏸️ Not started |                                                  |
 | 6     | Day 15 — V2 Scaffolding                      | ⏸️ Not started |                                                  |
 
-**Status legend:** ⏸️ Not started · 🔄 In progress · ✅ Completed · ⛔ Blocked
+**Status legend:** ⏸️ Not started · 🔄 In progress · 🟡 Partial · ✅ Completed · ⛔ Blocked

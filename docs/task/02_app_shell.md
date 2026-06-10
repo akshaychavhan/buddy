@@ -1,8 +1,8 @@
 # Task 02 — App Shell (Route Groups, Layouts, Loading & Error Boundaries)
 
 > **Started:** 2026-05-11
-> **Completed:** _TBD_
-> **Status:** 🔄 In Progress
+> **Completed:** 2026-06-10
+> **Status:** ✅ Done
 > **Phase:** 1 — Foundations
 
 ---
@@ -201,6 +201,51 @@ _(To be filled in as we go. If `(app)/page.tsx` conflicts with `app/page.tsx`, t
 
 ## ➡️ What's Next? (Follow-ups)
 
-- **Day 3 — Tailwind & Theme System:** real design tokens, wire up the theme toggle stub to actually toggle, semantic colors, FOUC prevention via cookies.
-- **Day 4 — Forms & Server Actions:** the trips list gets a real "Create Trip" modal; we feel `<form action={serverAction}>` for the first time.
-- **Day 6 — Prisma + MongoDB:** trips list page swaps hardcoded array for `await db.trip.findMany()` in a Server Component.
+- **Day 3 — Tailwind & Theme System:** real design tokens, wire up the theme toggle stub to actually toggle, semantic colors, FOUC prevention via cookies. Also picks up the a11y polish bucket accumulated across Day_25/Day_26/Day_28 (focus-visible rings, contrast on `text-neutral-500`, `aria-describedby` on hints).
+- **Day 4 — Forms & Server Actions:** the trips list gets a real "Create Trip" modal; we feel `<form action={serverAction}>` for the first time (deeper than the auth Server Actions from Day_25/Day_26).
+- **Day 6 — Prisma + MongoDB:** trips list page swaps hardcoded array for `await db.trip.findMany()` in a Server Component. Foundation already wired by Auth Detour `Day_15`–`Day_18`.
+
+---
+
+## 📓 Retrospective (2026-06-10, after Auth Detour closed in `Day_36`)
+
+Day 2 took a much longer path than originally planned. The original 12-commit Day-2 plan (Day_04 → Day_15) was on track at `Day_14_Add_per_page_metadata_exports` — 11 of 12 commits done, one docs-only close-out remaining — when the user paused and asked for full production auth before stamping Day 2 done. The close-out (`Day_15_Close_day_2_and_flip_progress_tracker`) was deferred into a 22-commit Auth Detour (Day_15 → Day_36) that pulled forward Day 6 (Prisma + MongoDB, partial) and Day 7 (Better Auth, fully). This task doc's tracker row stays "Day 2" but its actual close-out commit became `Day_36_Close_auth_detour_and_resume_day_2`.
+
+### Surprises worth remembering
+
+1. **The route-group / `app/page.tsx` move is atomic for a reason.** In `Day_06_Add_app_route_group_and_move_home_page`, creating `app/(app)/page.tsx` *before* moving the existing `app/page.tsx` would make Next refuse to build (`You cannot have two parallel pages that resolve to the same path`). The whole commit had to land as one `git mv` + new `(app)/layout.tsx` together. Documented in the Day_05 layouts learning doc beforehand; build never broke.
+
+2. **`error.tsx` MUST be a Client Component.** The Next.js dev overlay tells you so the moment you forget. Caught in advance via `Day_09_Add_loading_and_error_files_learning_doc` — the doc spelled out the requirement, so `Day_11`'s commit shipped it right the first time.
+
+3. **The theme-toggle hydration risk was avoided by keeping the stub fully static.** A real `localStorage`-reading toggle would have caused server-vs-client mismatches; Day_12 deferred that to Day 3. The stub demonstrates the Server / Client boundary without paying for hydration debugging.
+
+4. **Better Auth 1.6.14's kysely-adapter break.** In `Day_23_Add_better_auth_api_route_handler`, `pnpm build` failed with `'DEFAULT_MIGRATION_TABLE' is not exported from 'kysely'` — a real bug in the package's transitive build. Fix: mark `better-auth` as `serverComponentsExternalPackages` in `next.config.mjs`. The fix is small but documented in `Day_23`'s plan so future-us doesn't relearn it.
+
+5. **Lazy-init pattern saved both Resend (Day_32) and Google OAuth (Day_35).** Both libraries' configs were being evaluated at module load, which broke `pnpm build` whenever credentials weren't set. The `?? ""` lazy fallback (Google) and `let resend: Resend | null` lazy-getter (Resend) both move the failure from build-time to runtime. CI still passes; missing creds surface as clear errors only when a user actually tries the relevant sign-in path.
+
+6. **Layout-guard, not middleware.** Day_29's doc made the case explicitly: Prisma + MongoDB is Node-only; Edge Middleware can't run our session check without a round-trip through our own API. The layout-guard ships in 2 lines (`if (!session) redirect("/sign-in")`) inside `app/(app)/layout.tsx`, composes with route groups, and has no second source of truth.
+
+### Coverage shipped
+
+- 4 Day-2 learning docs (`day2_rsc_vs_client_components`, `day2_layouts_and_templates`, `day2_loading_and_error_files`, `day2_metadata_api`).
+- 2 Day-6 docs (Prisma + MongoDB foundation; Trip CRUD doc deferred to Day 6 proper).
+- 7 Day-7 docs (Better Auth overview, install, email/password flow, session reads, protecting pages, Resend for magic-link, Google OAuth extension).
+- Working `/sign-up`, `/sign-in` (3 options: password, magic-link, Google), `/trips` (gated), sign-out, header session state, `(app)` route protection.
+- 4 Atlas collections: `user`, `session`, `account`, `verification`. 5 indexes including 2 unique (email, session token).
+- 1 production-style fix (`Fix_01_Repair_prisma_client_typecheck_in_ci`) for the `@prisma/client`-needs-at-least-one-model CI failure.
+
+### Acceptance criteria (final pass)
+
+- ✅ `app/(app)/layout.tsx` — Server Component with header + nav `<Link>`s (Day_08), session-aware (Day_28), redirect-on-no-session (Day_30).
+- ✅ `app/(auth)/layout.tsx` — centered shell, no header (Day_07).
+- ✅ `app/(app)/trips/page.tsx` — placeholder trips list (Day_08).
+- ✅ `app/(auth)/sign-in/page.tsx` — three auth options (Day_26 password, Day_32 magic-link, Day_35 Google).
+- ✅ `app/loading.tsx` — root skeleton (Day_10).
+- ✅ `app/error.tsx` — root error boundary, Client Component (Day_11).
+- ✅ Client Component island via `components/theme-toggle.tsx` rendered in the Server layout (Day_12).
+- ✅ `<Link>` navigation, no full reloads (Day_08).
+- ✅ TypeScript strict + `pnpm lint` pass on every commit.
+- ✅ `pnpm dev` runs cleanly; Day 1 endpoints (`/`, `/api/health`) still respond.
+- ⏭️ **Resolved during Auth Detour:** "Real sign-in form" was originally deferred to Day 7; now done.
+- ⏭️ **Still deferred to Day 3:** real styled header with design tokens; a11y polish (focus rings, contrast).
+- ⏭️ **Still deferred to Day 5:** localized strings.
