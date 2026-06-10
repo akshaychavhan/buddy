@@ -81,10 +81,10 @@ _(none — all 22 Day 2 concepts covered. Close-out deferred to `Day_36` after t
 - [x] **Magic-link via Resend** — `lib/email.ts` wrapper, Better Auth magic-link plugin — `Day_31` (doc) + `Day_32` (code)
 - [x] **OAuth callback URLs** — why `BETTER_AUTH_URL` must match Google Console — `Day_33`
 - [x] **Google Cloud Console OAuth app registered** + env vars set — `Day_34`
+- [x] **Google provider enabled + "Sign in with Google" button** — three auth methods coexist — `Day_35`
 
 ### Concepts pending ⏳
 
-- [ ] **Google provider enabled + "Sign in with Google" button** — three auth methods coexist — `Day_35`
 - [ ] **Auth Detour close-out** — Day 2 → ✅, Day 6 → partial, Day 7 → ✅; checklist frozen — `Day_36`
 
 ### Deferred to later days

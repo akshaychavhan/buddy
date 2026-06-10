@@ -56,3 +56,18 @@ export async function magicLinkAction(
 
   return { error: null, sent: true };
 }
+
+export async function googleSignInAction() {
+  // Better Auth returns a `url` to redirect the browser to (Google's authorize
+  // endpoint). Our Server Action must call redirect(url) — returning the URL
+  // would leave the user sitting on /sign-in.
+  const { url } = await auth.api.signInSocial({
+    body: { provider: "google" },
+    // eslint-disable-next-line @typescript-eslint/await-thenable
+    headers: await headers(),
+  });
+  if (!url) {
+    throw new Error("Google sign-in failed: no redirect URL returned.");
+  }
+  redirect(url);
+}

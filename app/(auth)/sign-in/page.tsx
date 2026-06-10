@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { GoogleSignInButton } from "./google-sign-in-button";
 import { MagicLinkForm } from "./magic-link-form";
 import { SignInForm } from "./sign-in-form";
 
@@ -33,6 +34,14 @@ export default function SignInPage() {
       </div>
 
       <MagicLinkForm />
+
+      <div className="flex items-center gap-3 text-xs text-neutral-500">
+        <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-800" />
+        <span>or</span>
+        <div className="h-px flex-1 bg-neutral-200 dark:bg-neutral-800" />
+      </div>
+
+      <GoogleSignInButton />
     </div>
   );
 }
